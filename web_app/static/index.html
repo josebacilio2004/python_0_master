@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Python & SQL Master: Game Edition</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header con Barra de Nivel, XP y Racha -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo-area" onclick="app.switchTab('camino')">
+        <span class="logo-icon">🐍</span>
+        <div>
+          <h1 class="logo-title">Python Master</h1>
+          <span class="logo-subtitle" id="userRankTitle">Recluta del Byte</span>
+        </div>
+      </div>
+
+      <!-- Barra de Gamificación / Stats -->
+      <div class="gamification-bar">
+        <div class="stat-pill" title="Nivel del Jugador">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value" id="userLevelBadge">Nvl 1</span>
+        </div>
+        <div class="stat-pill" title="Puntos de Experiencia">
+          <span class="stat-icon">⚡</span>
+          <span class="stat-value" id="userXpBadge">150 XP</span>
+        </div>
+        <div class="stat-pill streak-pill" title="Racha de Días">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-value" id="userStreakBadge">3</span>
+        </div>
+        <button class="btn-db-seed" onclick="app.seedDatabase()" title="Sembrar / Restaurar datos en Supabase/SQLite">
+          🌱 <span class="hide-mobile">BD Seeder</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra de progreso hacia el siguiente nivel -->
+    <div class="level-progress-container">
+      <div class="level-progress-bar" id="levelProgressFill" style="width: 25%;"></div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal de Vistas -->
+  <main class="main-container" id="mainApp">
+    
+    <!-- ==================== PESTAÑA 1: CAMINO DEL JUEGO (ROADMAP) ==================== -->
+    <section id="tabCamino" class="view-tab active">
+      <div class="hero-card">
+        <div class="hero-text">
+          <h2>🗺️ El Camino del Desarrollador</h2>
+          <p>Conquista cada estación desde la sintaxis básica hasta la cima de la arquitectura de software. Completa retos y quizzes para subir de nivel.</p>
+        </div>
+        <div class="global-stats-row">
+          <div class="mini-stat">
+            <span class="mini-stat-num" id="statCompletedLessons">0</span>
+            <span class="mini-stat-lbl">Lecciones</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-num" id="statTotalXp">150</span>
+            <span class="mini-stat-lbl">Total XP</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-num" id="statAchievementsCount">0</span>
+            <span class="mini-stat-lbl">Insignias</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mapa Gamificado de Nodos (Quest Tree) -->
+      <div class="section-title">
+        <h3>📍 Estaciones de Aprendizaje</h3>
+      </div>
+      <div class="game-map-container" id="gameRoadmap">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA 2: CURSO INTERACTIVO DE SQL ==================== -->
+    <section id="tabSql" class="view-tab">
+      <div class="hero-card sql-hero">
+        <div class="hero-text">
+          <h2>🗄️ Academia Interactiva de SQL & Supabase</h2>
+          <p>Aprende SQL de forma didáctica. Escribe órdenes en lenguaje natural o código SQL puro. El sistema traducirá, explicará cada cláusula y ejecutará la consulta contra PostgreSQL/Supabase en tiempo real.</p>
+        </div>
+        <div class="sql-badge-info">
+          <span>🚀 Motor: PostgreSQL / Supabase Real</span>
+        </div>
+      </div>
+
+      <!-- Selector de Misiones SQL -->
+      <div class="section-title">
+        <h3>⚔️ Misiones SQL del Reino</h3>
+      </div>
+      <div class="sql-missions-scroll" id="sqlMissionsList">
+        <!-- Renderizado dinámicamente -->
+      </div>
+
+      <!-- Panel Interactivo de Consultas -->
+      <div class="sql-workspace-card">
+        <div class="workspace-header">
+          <div class="workspace-title">
+            <span>💬 Asistente Didáctico & Consola SQL</span>
+          </div>
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="btnModeAuto" onclick="app.setSqlMode('auto')">Auto (IA/NL)</button>
+            <button class="mode-btn" id="btnModeSql" onclick="app.setSqlMode('sql')">SQL Puro</button>
+          </div>
+        </div>
+
+        <!-- Sugerencias Rápidas en 1 clic -->
+        <div class="quick-prompts-bar">
+          <span class="quick-label">Prueba:</span>
+          <button class="chip-btn" onclick="app.setSqlQuery('selecciona el usuario de la tabla')">"selecciona el usuario de la tabla"</button>
+          <button class="chip-btn" onclick="app.setSqlQuery('muestra los productos con poco stock')">"productos con poco stock"</button>
+          <button class="chip-btn" onclick="app.setSqlQuery('usuarios vip con saldo mayor a 2500')">"usuarios vip"</button>
+          <button class="chip-btn" onclick="app.setSqlQuery('pedidos con nombre del cliente')">"pedidos con cliente (JOIN)"</button>
+          <button class="chip-btn" onclick="app.setSqlQuery('salario maximo y empleados por cada departamento')">"salarios por departamento"</button>
+        </div>
+
+        <div class="sql-input-area">
+          <textarea id="sqlInput" class="sql-textarea" rows="3" placeholder="Escribe tu consulta aquí... Ej: 'selecciona el usuario de la tabla' o 'SELECT * FROM usuarios;'"></textarea>
+          <div class="sql-actions">
+            <button class="btn-primary btn-run-sql" onclick="app.executeSqlQuery()">
+              ⚡ Ejecutar Consulta
+            </button>
+          </div>
+        </div>
+
+        <!-- Explicación Didáctica Desglosada -->
+        <div id="sqlExplanationBox" class="sql-explanation-card" style="display: none;">
+          <div class="explanation-title">💡 Explicación Didáctica de la Consulta:</div>
+          <div id="sqlInterpretedQuery" class="code-pill"></div>
+          <div id="sqlClausesList" class="clauses-grid"></div>
+        </div>
+
+        <!-- Tabla de Resultados en Vivo -->
+        <div id="sqlResultsBox" class="sql-results-card" style="display: none;">
+          <div class="results-header">
+            <h4>📊 Resultados de la Base de Datos</h4>
+            <div class="metrics-pills">
+              <span id="sqlExecutionTime" class="metric-pill">0 ms</span>
+              <span id="sqlTotalRows" class="metric-pill">0 filas</span>
+            </div>
+          </div>
+          <div class="table-responsive" id="sqlTableContainer">
+            <!-- Tabla renderizada -->
+          </div>
+        </div>
+
+        <!-- Explorador de Tablas de la Base de Datos -->
+        <div class="schema-explorer-toggle" onclick="app.toggleSchemaExplorer()">
+          <span>🗂️ Ver Estructura de Tablas Disponibles en Supabase ▼</span>
+        </div>
+        <div id="schemaExplorerContent" class="schema-explorer-content" style="display: none;">
+          <div class="schema-tables-grid" id="schemaTablesGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA 3: MICRO-PROGRAMAS DIDÁCTICOS ==================== -->
+    <section id="tabApps" class="view-tab">
+      <div class="hero-card apps-hero">
+        <div class="hero-text">
+          <h2>🧪 Laboratorio de Micro-Programas</h2>
+          <p>Herramientas interactivas construidas con los proyectos de <code>python_master.txt</code>. Prueba la lógica, interactúa con calculadoras, cajeros y simuladores de negocios.</p>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Aplicaciones -->
+      <div class="apps-grid">
+        <!-- App 1: Calculadora y Evaluador AST -->
+        <div class="app-card">
+          <div class="app-card-header">
+            <span class="app-icon">🧮</span>
+            <div>
+              <h4>Calculadora Aritmética & AST</h4>
+              <span class="app-tag">Operadores & Tipos</span>
+            </div>
+          </div>
+          <p class="app-desc">Evalúa expresiones matemáticas, comprende la precedencia de operadores PEMDAS y el tipo de dato devuelto.</p>
+          <div class="app-body">
+            <input type="text" id="calcInput" class="app-input" value="(15 + 5) * 2 ** 3 // 4 % 7" placeholder="Ej: (10 + 2) * 5">
+            <button class="btn-secondary btn-full" onclick="app.runCalculatorApp()">Calcular & Analizar Expresión</button>
+            <div id="calcOutput" class="app-result-box" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- App 2: Simulador de Cajero Automático (Reto 114) -->
+        <div class="app-card">
+          <div class="app-card-header">
+            <span class="app-icon">🏧</span>
+            <div>
+              <h4>Simulador de Cajero Automático</h4>
+              <span class="app-tag">Reto 114: Bucles & While</span>
+            </div>
+          </div>
+          <p class="app-desc">Simula las operaciones de una cuenta bancaria con menú interactivo, validación de saldos y depósitos.</p>
+          <div class="app-body">
+            <div class="atm-balance-display">
+              <span>Saldo Actual:</span>
+              <strong id="atmBalance">$1,000.00</strong>
+            </div>
+            <div class="atm-controls">
+              <input type="number" id="atmAmount" class="app-input" placeholder="Monto ($)">
+              <div class="btn-group-row">
+                <button class="btn-secondary" onclick="app.atmDeposit()">➕ Depositar</button>
+                <button class="btn-secondary" onclick="app.atmWithdraw()">➖ Retirar</button>
+              </div>
+            </div>
+            <div id="atmLog" class="atm-log-box">
+              <div class="log-entry">🟢 Cajero iniciado. Saldo: $1,000.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- App 3: Generador de ID Único & Emails (Retos 40 y 53) -->
+        <div class="app-card">
+          <div class="app-card-header">
+            <span class="app-icon">🆔</span>
+            <div>
+              <h4>Generador de ID & Email Corporativo</h4>
+              <span class="app-tag">Retos 40 y 53: Cadenas & Random</span>
+            </div>
+          </div>
+          <p class="app-desc">Genera identificadores normalizados utilizando slicing de texto y cadenas con formato.</p>
+          <div class="app-body">
+            <div class="form-row-2">
+              <input type="text" id="idNombre" class="app-input" placeholder="Nombre (Ej: Carlos)">
+              <input type="text" id="idApellido" class="app-input" placeholder="Apellido (Ej: Mendoza)">
+            </div>
+            <div class="form-row-2">
+              <input type="number" id="idAnio" class="app-input" placeholder="Año Nacimiento (Ej: 1995)">
+              <input type="text" id="idEmpresa" class="app-input" value="globalmentoring" placeholder="Empresa">
+            </div>
+            <button class="btn-secondary btn-full" onclick="app.runIdEmailApp()">Generar Credenciales</button>
+            <div id="idEmailOutput" class="app-result-box" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- App 4: Simulador Reserva de Hotel (Retos 20 y 95) -->
+        <div class="app-card">
+          <div class="app-card-header">
+            <span class="app-icon">🏨</span>
+            <div>
+              <h4>Simulador de Reserva Hotelera</h4>
+              <span class="app-tag">Retos 20 y 95: Descuentos & Condicionales</span>
+            </div>
+          </div>
+          <p class="app-desc">Calcula presupuestos de hospedaje con tarifas según habitación y descuentos de estancia.</p>
+          <div class="app-body">
+            <input type="text" id="hotelCliente" class="app-input" placeholder="Nombre Huésped" value="Ana Gómez">
+            <div class="form-row-2">
+              <select id="hotelHabitacion" class="app-input">
+                <option value="estandar">Habitación Estándar ($75/noche)</option>
+                <option value="vista_mar" selected>Suite Vista al Mar ($180/noche)</option>
+                <option value="presidencial">Suite Presidencial ($320/noche)</option>
+              </select>
+              <input type="number" id="hotelNoches" class="app-input" value="4" min="1" placeholder="Noches">
+            </div>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hotelDesayuno" checked> Incluir Desayuno Buffet ($20/noche)
+            </label>
+            <button class="btn-secondary btn-full" onclick="app.runHotelApp()">Calcular Tarifa</button>
+            <div id="hotelOutput" class="app-result-box" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA 4: CLASES BREVES (MICRO-LEARNING) ==================== -->
+    <section id="tabClases" class="view-tab">
+      <div class="hero-card">
+        <div class="hero-text">
+          <h2>📖 Módulo de Sesiones: Clases Breves</h2>
+          <p>Teoría pura explicada en 3 minutos. Lee los conceptos esenciales, revisa los patrones y afianza tu conocimiento con el mini-quizz inmediato.</p>
+        </div>
+      </div>
+      <div class="brief-classes-list" id="briefClassesList">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA 5: LOGROS & BADGES ==================== -->
+    <section id="tabLogros" class="view-tab">
+      <div class="hero-card achievements-hero">
+        <div class="hero-text">
+          <h2>🏆 Sala de Trofeos & Insignias</h2>
+          <p>Desbloquea medallas al completar bloques, dominar retos de concurrencia y ejecutar consultas avanzadas de SQL.</p>
+        </div>
+      </div>
+      <div class="badges-grid-full" id="achievementsList">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- ==================== VISTA MODAL: DETALLE DE LECCIÓN ==================== -->
+    <section id="viewLessonModal" class="lesson-modal" style="display: none;">
+      <div class="lesson-modal-content">
+        <button class="btn-close-modal" onclick="app.closeLessonModal()">✕ Cerrar</button>
+        <div id="lessonModalDetail"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar (Compatible con iPhone 7) -->
+  <nav class="mobile-nav">
+    <button class="nav-item active" onclick="app.switchTab('camino')">
+      <span class="nav-icon">🗺️</span>
+      <span class="nav-label">Camino</span>
+    </button>
+    <button class="nav-item" onclick="app.switchTab('sql')">
+      <span class="nav-icon">🗄️</span>
+      <span class="nav-label">Curso SQL</span>
+    </button>
+    <button class="nav-item" onclick="app.switchTab('apps')">
+      <span class="nav-icon">🧪</span>
+      <span class="nav-label">Apps</span>
+    </button>
+    <button class="nav-item" onclick="app.switchTab('clases')">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">Clases</span>
+    </button>
+    <button class="nav-item" onclick="app.switchTab('logros')">
+      <span class="nav-icon">🏆</span>
+      <span class="nav-label">Logros</span>
+    </button>
+  </nav>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2497 @@
+ Introducción a Python
+2 min
+Completados
+Reproducir
+3. ¿Qué es Python
+2 min
+Completados
+Reproducir
+4. ¿Qué es un Intérprete y cómo se relaciona con Python
+3 min
+Completados
+Reproducir
+5. Instalación de Python 3
+1 min
+Completados
+Reproducir
+6. ¿Qué es un IDE
+2 min
+Completados
+Reproducir
+7. Instalación de PyCharm
+5 min
+Completados
+Reproducir
+8. Hola Mundo con Python
+2 min
+Completados
+Reproducir
+9. Hola Mundo con Python y PyCharm
+4 min
+Completados
+Reproducir
+10. Comentarios en Python - Explicación
+3 min
+Completados
+Reproducir
+11. Ejercicio Propuesto - Preséntate con Python
+1 min
+Completados
+Reproducir
+12. Solución - Preséntate con Python
+4 min
+Completados
+Iniciar
+Ejercicio de codificación 1 Bienvenidos a la Universidad Python
+Completados
+Iniciar
+Cuestionario 1 Introducción a Python
+Completados
+Reproducir
+13. Variables en Python
+4 min
+Completados
+Reproducir
+14. Ejemplo de Variables en Python
+5 min
+Completados
+Reproducir
+15. Tipos de Datos en Python
+7 min
+Completados
+Reproducir
+16. Ejemplo de Tipos de Datos con Python
+8 min
+Completados
+Reproducir
+17. Modificación de Valores de Variables en Python
+8 min
+Completados
+Reproducir
+18. Reglas y Buenas prácticas de nombres de Variables en Python
+8 min
+Completados
+Reproducir
+19. Ejemplo Reglas y Buenas prácticas de nombres de Variables en Python
+7 min
+No se ha completado
+Reproducir
+20. Reto - Ejercicio de Reserva de Hoteles
+2 min
+No se ha completado
+Reproducir
+21. Solución - Reserva de Hoteles (PDF y Código actualizado)
+5 min
+No se ha completado
+Reproducir
+22. Reto - Sistema de Tienda Online
+1 min
+No se ha completado
+Reproducir
+23. Solución - Sistema de Tienda Online (PDF y Código actualizado)
+6 min
+No se ha completado
+Reproducir
+24. Constantes en Python (PDF y Código actualizado)
+5 min
+No se ha completado
+Iniciar
+Ejercicio de codificación 2 Creación de Variables en Python
+No se ha completado
+Iniciar
+Cuestionario 2 Variables en Python
+No se ha completado
+Reproducir
+25. Manejo de Cadenas en Python
+5 min
+No se ha completado
+Reproducir
+26. Cadenas Multilinea en Python
+3 min
+No se ha completado
+Reproducir
+27. Manejo de Caracteres Especiales en Python
+6 min
+No se ha completado
+Reproducir
+28. Ejemplo de Caracteres Especiales en Python
+6 min
+No se ha completado
+Reproducir
+29. Concatenación de Cadenas en Python
+5 min
+No se ha completado
+Reproducir
+30. Ejemplo de Concatenación de Cadenas con Python
+7 min
+No se ha completado
+Reproducir
+31. Longitud de una Cadena en Python
+2 min
+No se ha completado
+Reproducir
+32. Ejemplo Longitud de una Cadena en Python
+2 min
+No se ha completado
+Reproducir
+33. Convertir a Mayúsculas y Minúsculas en Python
+4 min
+No se ha completado
+Reproducir
+34. Inmutabilidad de Cadenas en Python
+5 min
+No se ha completado
+Reproducir
+35. Manejo de Subcadenas (slicing) en Python
+5 min
+No se ha completado
+Reproducir
+36. Ejemplo de Subcadenas en Python
+8 min
+No se ha completado
+Reproducir
+37. Reemplazar Subcadenas en Python
+6 min
+No se ha completado
+Reproducir
+38. Multiplicación de Cadenas en Python
+7 min
+No se ha completado
+Reproducir
+39. Busqueda de subcadenas en Python (PDF y Código Actualizado)
+5 min
+No se ha completado
+Reproducir
+40. Reto - Generador Email en Python
+3 min
+No se ha completado
+Reproducir
+41. Solución - Generador Email en Python (PDF y Código Actualizado)
+10 min
+No se ha completado
+Iniciar
+Cuestionario 3 Cadenas en Python
+No se ha completado
+Reproducir
+42. Conversion de Tipos de Datos con Python
+4 min
+No se ha completado
+Reproducir
+43. Ejemplo Conversión de tipos con Python
+3 min
+No se ha completado
+Reproducir
+44. Función Bool y los conceptos de Truthy y Falsy
+3 min
+No se ha completado
+Reproducir
+45. Ejemplo de la función bool en Python
+5 min
+No se ha completado
+Reproducir
+46. Ejemplo de Cadenas y la funcion bool
+3 min
+No se ha completado
+Reproducir
+47. Entrada de Datos por Consola en Python
+3 min
+No se ha completado
+Reproducir
+48. Ejemplo Entrada Datos por Consola en Python
+6 min
+No se ha completado
+Reproducir
+49. Ejemplo Sistema de Empleados (PDF y Código Actualizado)
+11 min
+No se ha completado
+Reproducir
+50. Reto - Receta de Cocina
+2 min
+No se ha completado
+Reproducir
+51. Solución - Receta de Cocina (PDF y Código Actualizado)
+4 min
+No se ha completado
+Reproducir
+52. Generación de Valores Aleatorios (PDF y Código Actualizado)
+7 min
+No se ha completado
+Reproducir
+53. Reto - Generador de Id Único
+3 min
+No se ha completado
+Reproducir
+54. Solución - Generador de Id Único (PDF y Código Actualizado)
+11 min
+No se ha completado
+Reproducir
+55. Reto - Generador de Emails
+3 min
+No se ha completado
+Reproducir
+56. Solución - Generador de Emails (PDF y Código Actualizado)
+7 min
+No se ha completado
+Reproducir
+57. Operadores en Python
+1 min
+No se ha completado
+Reproducir
+58. Operadores Aritméticos en Python
+8 min
+No se ha completado
+Reproducir
+59. Operadores de Asignación en Python
+3 min
+No se ha completado
+Reproducir
+60. Asignación múltiple encadenada en Python
+6 min
+No se ha completado
+Reproducir
+61. Ejemplo de Asignación Múltiple en Python
+7 min
+No se ha completado
+Reproducir
+62. Operador de Asignación Compuesto en Python
+6 min
+No se ha completado
+Reproducir
+63. Operadores de Comparación en Python
+5 min
+No se ha completado
+Reproducir
+64. Ejemplo Operadores de Comparación (relacionales) en Python
+6 min
+No se ha completado
+Reproducir
+65. Operadores Lógicos en Python
+2 min
+No se ha completado
+Reproducir
+66. Operador and en Python
+3 min
+No se ha completado
+Reproducir
+67. Ejemplo Descuento VIP
+6 min
+No se ha completado
+Reproducir
+68. Operador or en Python
+3 min
+No se ha completado
+Reproducir
+69. Ejemplo préstamo de libros - operador or
+6 min
+No se ha completado
+Reproducir
+70. Ejemplo operador not en Python
+6 min
+No se ha completado
+Reproducir
+71. Ejemplo fuera de rango - operador not
+4 min
+No se ha completado
+Reproducir
+72. Ejemplo ticket de venta
+6 min
+No se ha completado
+Reproducir
+73. Ejemplo ticket de venta con descuento
+5 min
+No se ha completado
+Reproducir
+74. Reto - Sistema de Autenticación
+2 min
+No se ha completado
+Reproducir
+75. Solución - Sistema de Autenticación
+4 min
+No se ha completado
+Reproducir
+76. Reto - Valor dentro de rango
+1 min
+No se ha completado
+Reproducir
+77. Solución - Valor dentro de rango
+6 min
+No se ha completado
+Reproducir
+78. Propuesto - Cálculo área de un rectángulo
+1 min
+No se ha completado
+Reproducir
+79. Solución - Cálculo área de un rectángulo
+5 min
+No se ha completado
+Reproducir
+80. Precedencia de Operadores en Python
+8 min
+No se ha completado
+Reproducir
+81. Sentencias de Decisión en Python
+3 min
+No se ha completado
+Reproducir
+82. Diagrama Flujo sentencia if
+4 min
+No se ha completado
+Reproducir
+83. Ejemplo Sentencia if
+4 min
+No se ha completado
+Reproducir
+84. Sentencia if else en Python
+4 min
+No se ha completado
+Reproducir
+85. Sentencia if elif else en Python
+5 min
+No se ha completado
+Reproducir
+86. Ejemplo Sentencia if elif else en Python
+4 min
+No se ha completado
+Reproducir
+87. Ejecución Paso a Paso - Mayor de Edad
+10 min
+No se ha completado
+Reproducir
+88. Ejemplo Valor Positivo
+6 min
+No se ha completado
+Reproducir
+89. Reto - Tienda en Línea con Descuentos
+3 min
+No se ha completado
+Reproducir
+90. Solución - Tienda en Línea con Descuentos
+9 min
+No se ha completado
+Reproducir
+91. Ejemplo Sistema Bancario
+6 min
+No se ha completado
+Reproducir
+92. Ejemplo Casa de los Espejos
+5 min
+No se ha completado
+Reproducir
+93. Operador Ternario en Python
+5 min
+No se ha completado
+Reproducir
+94. Aplicación Salud Fitness
+8 min
+No se ha completado
+Reproducir
+95. Reto - Reserva de Hotel
+2 min
+No se ha completado
+Reproducir
+96. Solución - Reserva de Hotel
+6 min
+No se ha completado
+Reproducir
+97. Reto - El mayor de dos números
+1 min
+No se ha completado
+Reproducir
+98. Solución - El mayor de dos números
+2 min
+No se ha completado
+Reproducir
+99. Reto - Estación del Año
+1 min
+No se ha completado
+Reproducir
+100. Solución - Estación del Año
+4 min
+No se ha completado
+Reproducir
+101. Reto - Sistema de Calificaciones
+1 min
+No se ha completado
+Reproducir
+102. Solución - Sistema de Calificaciones
+6 min
+No se ha completado
+Reproducir
+103. Reto - Sistema de Envíos
+1 min
+No se ha completado
+Reproducir
+104. Solución - Sistema de Envíos
+6 min
+No se ha completado
+Reproducir
+105. Reto - Sistema de Autenticación
+1 min
+No se ha completado
+Reproducir
+106. Solución - Sistema de Autenticación
+4 min
+No se ha completado
+Reproducir
+107. Ciclo while en Python
+6 min
+No se ha completado
+Reproducir
+108. Ejemplo ciclo while en Python
+5 min
+No se ha completado
+Reproducir
+109. Ejecución Paso a Paso ciclo while
+4 min
+No se ha completado
+Reproducir
+110. Ciclo for en Python
+4 min
+No se ha completado
+Reproducir
+111. Ejemplo Ciclo for en Python
+6 min
+No se ha completado
+Reproducir
+112. Suma Acumulativa en Python
+10 min
+No se ha completado
+Reproducir
+113. Menú Iterativo en Python
+9 min
+No se ha completado
+Reproducir
+114. Reto - Cajero Automático
+2 min
+No se ha completado
+Reproducir
+115. Solución - Cajero Automático
+8 min
+No se ha completado
+Reproducir
+116. Propuesto - Calculadora
+2 min
+No se ha completado
+Reproducir
+117. Solución - Calculadora
+9 min
+No se ha completado
+Reproducir
+118. Propuesto - Creación de Password
+1 min
+No se ha completado
+Reproducir
+119. Solución - Creación de Password
+4 min
+No se ha completado
+Reproducir
+120. Reto - Juego Adivinar
+1 min
+No se ha completado
+Reproducir
+121. Solución - Juego Adivinar
+8 min
+No se ha completado
+Reproducir
+122. Validación de Información de un Formulario
+3 min
+No se ha completado
+Reproducir
+123. Función range en Python
+8 min
+No se ha completado
+Reproducir
+124. Imprimir mensaje funcion range
+5 min
+No se ha completado
+Reproducir
+125. Dibujar un Triángulo con Python
+9 min
+No se ha completado
+Reproducir
+126. Palabra break y continue en ciclos
+7 min
+No se ha completado
+Iniciar
+Ejercicio de codificación 3 Ejercicio Contador de Vocales en Python
+No se ha completado
+Reproducir
+127. Listas en Python
+3 min
+No se ha completado
+Reproducir
+128. Ejemplo de Listas en Python
+6 min
+No se ha completado
+Reproducir
+129. Agregar elementos a un Lista
+5 min
+No se ha completado
+Reproducir
+130. Eliminar elementos de una Lista
+6 min
+No se ha completado
+Reproducir
+131. Iterar elementos de una Lista
+3 min
+No se ha completado
+Reproducir
+132. Ejemplo de una Playlist
+6 min
+No se ha completado
+Reproducir
+133. Ejemplo de una Playlist - parte 2
+4 min
+No se ha completado
+Reproducir
+134. Reto - Promedio de Calificaciones
+2 min
+No se ha completado
+Reproducir
+135. Solución - Promedio de Calificaciones
+5 min
+No se ha completado
+Reproducir
+136. Tuplas en Python
+3 min
+No se ha completado
+Reproducir
+137. Ejemplo de Tuplas
+9 min
+No se ha completado
+Reproducir
+138. Desempaquetado de Tuplas (unpacking)
+4 min
+No se ha completado
+Reproducir
+139. Combinación de Listas y Tuplas
+11 min
+No se ha completado
+Reproducir
+140. Sets (Conjuntos) en Python
+3 min
+No se ha completado
+Reproducir
+141. Ejemplo de Sets en Python
+8 min
+No se ha completado
+Reproducir
+142. Operaciones con Sets en Python
+5 min
+No se ha completado
+Reproducir
+143. Ejemplo Lista de Suscriptores con Sets
+8 min
+No se ha completado
+Reproducir
+144. Lista de Suscriptores dinámica con Sets en Python
+7 min
+No se ha completado
+Reproducir
+145. Diccionarios en Python
+3 min
+No se ha completado
+Reproducir
+146. Ejemplo de Diccionarios en Python
+8 min
+No se ha completado
+Reproducir
+147. Más operaciones con Diccionarios en Python
+8 min
+No se ha completado
+Reproducir
+148. Ejemplo Agenda de Contactos con Diccionarios en Python
+6 min
+No se ha completado
+Reproducir
+149. Agenda de Contactos - parte 2
+10 min
+No se ha completado
+Reproducir
+150. Combinar Listas y Diccionarios en Python
+10 min
+No se ha completado
+Reproducir
+151. Reto - Sistema de Inventarios en Python
+3 min
+No se ha completado
+Reproducir
+152. Solución - Sistema de Inventarios en Python
+6 min
+No se ha completado
+Reproducir
+153. Solución - Sistema de Inventarios en Python - parte 2
+7 min
+No se ha completado
+Iniciar
+Cuestionario 4 Cuestionario de Colecciones en Python
+No se ha completado
+Reproducir
+154. Funciones en Python
+6 min
+No se ha completado
+Reproducir
+155. Ejemplo Función Saludar en Python
+4 min
+No se ha completado
+Reproducir
+156. Manejo de parámetros en una función en Python
+4 min
+No se ha completado
+Reproducir
+157. Ejemplo función sumar en Python
+5 min
+No se ha completado
+Reproducir
+158. Modo Debug en Python
+4 min
+No se ha completado
+Reproducir
+159. Módulos en Pyhton
+8 min
+No se ha completado
+Reproducir
+160. Argumentos por nombre en una función en Python
+9 min
+No se ha completado
+Reproducir
+161. Regresar una tupla de valores desde una función en Python
+5 min
+No se ha completado
+Reproducir
+162. Ejemplo Coordenadas - retornar varios valores
+5 min
+No se ha completado
+Reproducir
+163. Alcance de Variables en Python
+8 min
+No se ha completado
+Reproducir
+164. Argumentos variables args en Python
+8 min
+No se ha completado
+Reproducir
+165. Argumentos variables en forma de diccionarios kwargs en Python
+6 min
+No se ha completado
+Reproducir
+166. Suma con Argumentos Variables
+3 min
+No se ha completado
+Reproducir
+167. Ejemplo con kwargs - Detalle de Persona
+4 min
+No se ha completado
+Reproducir
+168. Ejemplo de función números pares en Python
+3 min
+No se ha completado
+Reproducir
+169. Funciones Recursivas en Python
+2 min
+No se ha completado
+Reproducir
+170. Ejemplo de funciones recursivas en Python
+5 min
+No se ha completado
+Reproducir
+171. Ejecución paso a paso de función recursiva en Python
+6 min
+No se ha completado
+Reproducir
+172. Ejercicio - Factorial de un número con recursividad en Python
+7 min
+No se ha completado
+Reproducir
+173. Reto Calcular la potencia de un número con recursividad
+2 min
+No se ha completado
+Reproducir
+174. Solución Potencia de un número con recursividad
+4 min
+No se ha completado
+Reproducir
+175. Reto Sistema de Inventarios
+3 min
+No se ha completado
+Reproducir
+176. Solución Sistema de Inventarios. Parte 1.
+9 min
+No se ha completado
+Reproducir
+177. Solución Sistema de Inventarios. Parte 2.
+4 min
+No se ha completado
+Reproducir
+178. Solución Sistema de Inventarios. Parte 3.
+4 min
+No se ha completado
+Reproducir
+179. Reto Máquina de Snacks
+3 min
+No se ha completado
+Reproducir
+180. Solución Máquina de Snacks. Parte 1.
+6 min
+No se ha completado
+Reproducir
+181. Solución Máquina de Snacks. Parte 2.
+2 min
+No se ha completado
+Reproducir
+182. Solución Máquina de Snacks. Parte 3.
+5 min
+No se ha completado
+Reproducir
+183. Solución Máquina de Snacks. Parte 4.
+5 min
+No se ha completado
+Reproducir
+184. Reto Calculadora (Con Funciones)
+1 min
+No se ha completado
+Reproducir
+185. Solución Calculadora (Con Funciones). Parte 1.
+4 min
+No se ha completado
+Reproducir
+186. Solución Calculadora (Con Funciones). Parte 2.
+8 min
+No se ha completado
+Reproducir
+187. Ejercicio Propuesto Calculadora de Impuestos
+1 min
+No se ha completado
+Reproducir
+188. Solución Ejercicio Calculadora de Impuestos
+4 min
+No se ha completado
+Reproducir
+189. Ejercicio Propuesto Convertidor de Temperaturas
+1 min
+No se ha completado
+Reproducir
+190. Solución Ejercicio Convertidor de Temperatura
+7 min
+No se ha completado
+Iniciar
+Cuestionario 5 Cuestionario de Funciones en Python
+No se ha completado
+Reproducir
+191. Clases y Objetos en Python
+2 min
+No se ha completado
+Reproducir
+192. Creación de Clases en Python
+6 min
+No se ha completado
+Reproducir
+193. Creación de Objetos en Python
+5 min
+No se ha completado
+Reproducir
+194. Creación de Objetos en Python - parte 2
+4 min
+No se ha completado
+Reproducir
+195. Constructores en Python
+3 min
+No se ha completado
+Reproducir
+196. Ejemplo de Constructores en Python
+4 min
+No se ha completado
+Reproducir
+197. Dirección de Memoria de Objetos en Python
+7 min
+No se ha completado
+Reproducir
+198. Reto - Clase Aritmética en Python
+1 min
+No se ha completado
+Reproducir
+199. Solución - Clase Aritmética en Python
+8 min
+No se ha completado
+Reproducir
+200. Flexibilidad de Constructores en Python
+8 min
+No se ha completado
+Reproducir
+201. Encapsulamiento en Python
+2 min
+No se ha completado
+Reproducir
+202. Ejemplo de Encapsulamiento en Python
+7 min
+No se ha completado
+Reproducir
+203. Métodos get y set en Python
+5 min
+No se ha completado
+Reproducir
+204. Mejora de Encapsulamiento en Python
+6 min
+No se ha completado
+Reproducir
+205. Atributos dinámicos en Objetos
+6 min
+No se ha completado
+Reproducir
+206. Reto - Encapsulamiento Clase Aritmética
+1 min
+No se ha completado
+Reproducir
+207. Solución - Encapsulamiento Aritmética
+6 min
+No se ha completado
+Reproducir
+208. Atributos de Clase en Python
+9 min
+No se ha completado
+Reproducir
+209. Ejemplo Contador de Objetos de tipo Persona
+7 min
+No se ha completado
+Reproducir
+210. Métodos de Clase en Python
+9 min
+No se ha completado
+Reproducir
+211. Sistema de Empleados en Python
+3 min
+No se ha completado
+Reproducir
+212. Creación Clase de Empleado
+3 min
+No se ha completado
+Reproducir
+213. Creación Clase de Empresa
+6 min
+No se ha completado
+Reproducir
+214. Prueba Sistema de Empleados
+8 min
+No se ha completado
+Reproducir
+215. Reto - Sistema de Bibliotecas en Python
+3 min
+No se ha completado
+Reproducir
+216. Creación Clase Libro en Python
+3 min
+No se ha completado
+Reproducir
+217. Creación Clase Biblioteca en Python
+7 min
+No se ha completado
+Reproducir
+218. Prueba Sistema de Bibliotecas en Python
+7 min
+No se ha completado
+Iniciar
+Ejercicio de codificación 4 Creación de la Clase HolaMundo
+No se ha completado
+Reproducir
+219. Herencia en Python - parte 1
+4 min
+No se ha completado
+Reproducir
+220. Herencia en Python - parte 2
+4 min
+No se ha completado
+Reproducir
+221. Sobreescritura en Python
+5 min
+No se ha completado
+Reproducir
+222. Polimorfismo en Python
+5 min
+No se ha completado
+Reproducir
+223. Ejemplo de Polimorfismo en Python
+6 min
+No se ha completado
+Reproducir
+224. DuckTyping en Python
+4 min
+No se ha completado
+Reproducir
+225. Clase Object en Python
+3 min
+No se ha completado
+Reproducir
+226. Ejemplo Clase Object en Python
+7 min
+No se ha completado
+Reproducir
+227. Aplicación de Mundo PC
+5 min
+No se ha completado
+Reproducir
+228. Clase DispositivoEntrada y Raton
+8 min
+No se ha completado
+Reproducir
+229. Clase Teclado
+4 min
+No se ha completado
+Reproducir
+230. Clase Monitor
+4 min
+No se ha completado
+Reproducir
+231. Clase Computadora
+7 min
+No se ha completado
+Reproducir
+232. Clase Orden
+4 min
+No se ha completado
+Reproducir
+233. Mundo PC Aplicación
+5 min
+No se ha completado
+Iniciar
+Cuestionario 6 Programación Orientada a Objetos (POO)
+No se ha completado
+Reproducir
+234. ¿Qué es ChatGPT
+4 min
+No se ha completado
+Reproducir
+235. Compresión de Listas en Python
+12 min
+No se ha completado
+Reproducir
+236. Función zip en Python
+6 min
+No se ha completado
+Reproducir
+237. Más de manejo de cadenas en Python (opcional)
+11 min
+No se ha completado
+Reproducir
+238. Funciones lambda en Python
+9 min
+No se ha completado
+Reproducir
+239. Funciones map y filter en Python
+7 min
+No se ha completado
+Reproducir
+240. Función reduce en Python
+4 min
+No se ha completado
+Reproducir
+241. Ordenamiento (sorted) en Python
+9 min
+No se ha completado
+Reproducir
+242. Generadores en Python
+7 min
+No se ha completado
+Reproducir
+243. Expresiones Generadoras en Python
+4 min
+No se ha completado
+Reproducir
+244. Decoradores en Python
+9 min
+No se ha completado
+Reproducir
+245. Función sum y next en Python
+7 min
+No se ha completado
+Reproducir
+246. Manejo de Excepciones en Python
+10 min
+No se ha completado
+Reproducir
+247. Más de Manejo de Excepciones en Python
+5 min
+No se ha completado
+Reproducir
+248. Manejo de Archivos en Python
+3 min
+No se ha completado
+Reproducir
+249. Creación de Archivos en Python
+4 min
+No se ha completado
+Reproducir
+250. Bloque with en Python
+3 min
+No se ha completado
+Reproducir
+251. Creación Archivo en Modo Exclusivo
+5 min
+No se ha completado
+Reproducir
+252. Leer un Archivo en Python
+6 min
+No se ha completado
+Reproducir
+253. Anexar a Archivo en Python
+4 min
+No se ha completado
+Reproducir
+254. Máquina de Snacks con Manejo de Archivos
+2 min
+No se ha completado
+Reproducir
+255. Clase Snack - Máquina de Snacks
+4 min
+No se ha completado
+Reproducir
+256. Cargar Snacks Iniciales
+9 min
+No se ha completado
+Reproducir
+257. Obtener Snacks Archivo
+9 min
+No se ha completado
+Reproducir
+258. Cliente Máquina Snacks - parte 1
+9 min
+No se ha completado
+Reproducir
+259. Cliente Máquina Snacks - parte 2
+10 min
+No se ha completado
+Reproducir
+260. Prueba - Máquina de Snacks con Archivos
+6 min
+No se ha completado
+Reproducir
+261. Ejercicio Propuesto - Catálogo de Películas con Archivos
+6 min
+No se ha completado
+Reproducir
+262. Servicio Películas - Catálogo de Películas
+7 min
+No se ha completado
+Reproducir
+263. Aplicación Catálogo de Películas
+13 min
+No se ha completado
+Reproducir
+264. ¿Qué es una Base de Datos
+3 min
+No se ha completado
+Reproducir
+265. Instalación de Mysql
+5 min
+No se ha completado
+Reproducir
+266. Creación Tabla de Personas en MySql
+5 min
+No se ha completado
+Reproducir
+267. Sentencia Select en MySql
+5 min
+No se ha completado
+Reproducir
+268. Sentencia Insert en MySql
+6 min
+No se ha completado
+Reproducir
+269. Sentencia Update y Delete en MySql
+7 min
+No se ha completado
+Reproducir
+270. Sentencias CRUD en MySql Workbench
+4 min
+No se ha completado
+Reproducir
+271. Conector MySql y Python
+4 min
+No se ha completado
+Reproducir
+272. Sentencia Select desde Python a MySql
+7 min
+No se ha completado
+Reproducir
+273. Sentencia Insert desde Python a MySql
+7 min
+No se ha completado
+Reproducir
+274. Sentencia Update desde Python a MySql
+4 min
+No se ha completado
+Reproducir
+275. Sentencia Delete desde Python a MySql
+3 min
+No se ha completado
+Reproducir
+276. Demo App Zona Fit con Python y MySql
+3 min
+No se ha completado
+Reproducir
+277. Creación de la Tabla Cliente en MySql
+4 min
+No se ha completado
+Reproducir
+278. Concepto Pool de Conexiones
+3 min
+No se ha completado
+Reproducir
+279. Creación del Pool de Conexiones
+10 min
+No se ha completado
+Reproducir
+280. Clase Cliente - Zona Fit
+3 min
+No se ha completado
+Reproducir
+281. Patrón de Diseño DAO (Data Access Object)
+3 min
+No se ha completado
+Reproducir
+282. Método Seleccionar - Clase DAO
+9 min
+No se ha completado
+Reproducir
+283. Método Insertar - Clase DAO
+6 min
+No se ha completado
+Reproducir
+284. Método Actualizar - Clase DAO
+6 min
+No se ha completado
+Reproducir
+285. Método Eliminar - Clase DAO
+5 min
+No se ha completado
+Reproducir
+286. Listado de Clientes - Zona Fit App
+5 min
+No se ha completado
+Reproducir
+287. Agregar Cliente - Zona Fit App
+3 min
+No se ha completado
+Reproducir
+288. Editar y Eliminar Clientes - Zona Fit App
+6 min
+No se ha completado
+Reproducir
+289. Introducción a Tkinter y ChatGPT
+2 min
+No se ha completado
+Reproducir
+290. Creación de una Ventana con Tkinter
+5 min
+No se ha completado
+Reproducir
+291. Manejo de Etiquetas con Tkinter
+6 min
+No se ha completado
+Reproducir
+292. Manejo de Botones con Tkinter
+5 min
+No se ha completado
+Reproducir
+293. Manejo de Cajas con Tkinter
+8 min
+No se ha completado
+Reproducir
+294. Manejo de Grid con Tkinter
+8 min
+No se ha completado
+Reproducir
+295. Configuración del Grid en Tkinter
+6 min
+No se ha completado
+Reproducir
+296. Coordenadas del Grid en Tkinter
+7 min
+No se ha completado
+Reproducir
+297. Manejo de Márgenes del Grid
+5 min
+No se ha completado
+Reproducir
+298. Aplicación Login - parte 1
+9 min
+No se ha completado
+Reproducir
+299. Aplicación Login - parte 2
+7 min
+No se ha completado
+Reproducir
+300. Aplicación Login - parte 3
+4 min
+No se ha completado
+Reproducir
+301. Aplicación Login - parte 4
+8 min
+No se ha completado
+Reproducir
+302. Aplicación de Login con ChatGPT
+7 min
+No se ha completado
+Reproducir
+303. Creación Aplicación de Login con ChatGPT
+7 min
+No se ha completado
+Reproducir
+304. Manejo de Tablas en Tkinter - parte 1
+8 min
+No se ha completado
+Reproducir
+305. Manejo de Tablas en Tkinter - parte 2
+2 min
+No se ha completado
+Reproducir
+306. Manejo de Tablas en Tkinter - parte 3
+3 min
+No se ha completado
+Reproducir
+307. Manejo de Tablas en Tkinter - parte 4
+4 min
+No se ha completado
+Reproducir
+308. Manejo de Tablas en Tkinter - parte 5
+7 min
+No se ha completado
+Reproducir
+309. Manejo de Tablas con ChatGPT
+4 min
+No se ha completado
+Reproducir
+310. Programación Orientada a Objetos (POO) y Tkinter
+5 min
+No se ha completado
+Reproducir
+311. Ventanas y POO con Tkinter - parte 2
+8 min
+No se ha completado
+Reproducir
+312. Demo - Zona Fit con Tkinter
+4 min
+No se ha completado
+Reproducir
+313. Configuración Proyecto Zona Fit con Tkinter
+4 min
+No se ha completado
+Reproducir
+314. Creación Ventana Zona Fit con Tkinter
+5 min
+No se ha completado
+Reproducir
+315. Título Zona Fit con Tkinter
+4 min
+No se ha completado
+Reproducir
+316. Creación Tabla Clientes - Zona Fit - parte 1
+8 min
+No se ha completado
+Reproducir
+317. Creación Tabla Clientes - Zona Fit - parte 2
+9 min
+No se ha completado
+Reproducir
+318. Creación Tabla Clientes - Zona Fit - parte 3
+2 min
+No se ha completado
+Reproducir
+319. Creación del Formulario de Clientes - Zona Fit
+6 min
+No se ha completado
+Reproducir
+320. Botones de la App Zona Fit
+7 min
+No se ha completado
+Reproducir
+321. Estilos de los Botones - Zona Fit
+2 min
+No se ha completado
+Reproducir
+322. Validación del Formulario - Zona Fit
+7 min
+No se ha completado
+Reproducir
+323. Agregar Cliente - Zona Fit con Tkinter
+8 min
+No se ha completado
+Reproducir
+324. Cargar Cliente - Zona Fit con Tkinter
+9 min
+No se ha completado
+Reproducir
+325. Actualizar Cliente - Zona Fit con Tkinter
+5 min
+No se ha completado
+Reproducir
+326. Eliminar Cliente - Zona Fit con Tkinter
+5 min
+No se ha completado
+Reproducir
+327. Introducción a HTML
+4 min
+No se ha completado
+Reproducir
+328. Hola Mundo con HTML
+9 min
+No se ha completado
+Reproducir
+329. Links en HTML
+6 min
+No se ha completado
+Reproducir
+330. Introducción a CSS
+4 min
+No se ha completado
+Reproducir
+331. Estilos Internos en CSS
+8 min
+No se ha completado
+Reproducir
+332. Estilos Externos en CSS
+8 min
+No se ha completado
+Reproducir
+333. Clases y Selectores en CSS
+7 min
+No se ha completado
+Reproducir
+334. Introducción a Bootstrap
+5 min
+No se ha completado
+Reproducir
+335. Hola Mundo con Bootstrap
+10 min
+No se ha completado
+Reproducir
+336. Tabla HTML con Bootstrap
+8 min
+No se ha completado
+Reproducir
+337. Introducción a Flask
+9 min
+No se ha completado
+Reproducir
+338. Hola Mundo con Flask
+7 min
+No se ha completado
+Reproducir
+339. Varias Rutas en Flask
+3 min
+No se ha completado
+Reproducir
+340. Respuesta Contenido HTML en Flask
+5 min
+No se ha completado
+Reproducir
+341. Manejo de Parámetros en Flask
+3 min
+No se ha completado
+Reproducir
+342. Título App Zona Fit con Flask
+5 min
+No se ha completado
+Reproducir
+343. Manejo de Grid con Bootstrap
+8 min
+No se ha completado
+Reproducir
+344. Tabla de Clientes Estática con Bootstrap
+5 min
+No se ha completado
+Reproducir
+345. Tabla de Clientes Estática con Bootstrap
+10 min
+No se ha completado
+Reproducir
+346. Diseño de Botones con Bootstrap
+5 min
+No se ha completado
+Reproducir
+347. Formulario con Bootstrap y Flask
+7 min
+No se ha completado
+Reproducir
+348. Botones Formulario con Bootstrap y Flask
+7 min
+No se ha completado
+Reproducir
+349. Instalación de WTForms y Flask
+5 min
+No se ha completado
+Reproducir
+350. Creación de la clase Form con WTForms y Flask
+5 min
+No se ha completado
+Reproducir
+351. Creación Objeto Cliente Forma con WTForms y Flask
+4 min
+No se ha completado
+Reproducir
+352. Procesar campo nombre con WTForms y Flask
+7 min
+No se ha completado
+Reproducir
+353. Procesar Formulario con WTForms y Flask
+6 min
+No se ha completado
+Reproducir
+354. Insertar Cliente con WTForms y Flask
+9 min
+No se ha completado
+Reproducir
+355. Limpiar Formulario con Flask
+2 min
+No se ha completado
+Reproducir
+356. Cargar Cliente Seleccionado con Flask
+11 min
+No se ha completado
+Reproducir
+357. Campo Id oculto en el Formulario
+5 min
+No se ha completado
+Reproducir
+358. Actualizar Cliente con Flask
+5 min
+No se ha completado
+Reproducir
+359. Eliminar Cliente con Flask
+5 min
+No se ha completado
+Reproducir
+360. Demo Aplicación Flask Academy
+2 min
+No se ha completado
+Reproducir
+361. Prompt ChatGPT creación App Flask Academy (incluye PDF con solución)
+3 min
+No se ha completado
+Reproducir
+362. Fase 1 - Creación App Flask
+8 min
+No se ha completado
+Reproducir
+363. Explicación Fase 1 - Creación App Flask
+6 min
+No se ha completado
+Reproducir
+364. Fase 2 - Configuración Flask, MySql y ChatGPT
+11 min
+No se ha completado
+Reproducir
+365. Fase 3 - Creación de la Clase de Modelo con Sql Alchemy y ChatGPT
+10 min
+No se ha completado
+Reproducir
+366. Fase 4 - Listado de Cursos con Flask y ChatGPT
+4 min
+No se ha completado
+Reproducir
+367. Fase 5 - Agregar Curso con Flask WTF y ChatGPT
+12 min
+No se ha completado
+Reproducir
+368. Fase 6 - Editar Curso con Flask y ChatGPT
+11 min
+No se ha completado
+Reproducir
+369. Fase 7 - Eliminar Curso con Flask y ChatGPT
+8 min
+No se ha completado
+Reproducir
+370. Cambios Finales y Uso de Plantillas con Flask y ChatGPT
+9 min
+No se ha completado
+Reproducir
+371. Demo Aplicación Web Full Stack con Angular, Flask, Python y Mysql con ChatGPT
+1 min
+No se ha completado
+Reproducir
+372. ¿Qué es una Aplicación Full Stack y un API
+4 min
+No se ha completado
+Reproducir
+373. ¿Qué es Flask REST
+3 min
+No se ha completado
+Reproducir
+374. Creación del BackEnd con Flask REST
+4 min
+No se ha completado
+Reproducir
+375. Creación de la Base de Datos de MySql
+1 min
+No se ha completado
+Iniciar
+376. Nota Importante Una librería más en el proyecto RH
+1 min
+No se ha completado
+Reproducir
+377. Hola Mundo con Flask
+4 min
+No se ha completado
+Reproducir
+378. ¿Qué es un ORM y qué es Flask Alchemy
+3 min
+No se ha completado
+Reproducir
+379. Configuración del Proyecto de RH con ChatGPT
+6 min
+No se ha completado
+Reproducir
+380. Creación de Extensiones de Flask
+7 min
+No se ha completado
+Reproducir
+381. Creación de la Clase de Modelo
+4 min
+No se ha completado
+Reproducir
+382. Creación del Schema con MarshMallow
+6 min
+No se ha completado
+Reproducir
+383. Creación del API de Empleados
+10 min
+No se ha completado
+Reproducir
+384. Configuración Aplicación con Flask Final
+7 min
+No se ha completado
+Reproducir
+385. Configuración App con Flask Final - parte 2
+5 min
+No se ha completado
+Reproducir
+386. Migraciones con Alembic
+5 min
+No se ha completado
+Reproducir
+387. Ejecución del Back End con Flask
+3 min
+No se ha completado
+Reproducir
+388. Ejecución del Back End con Flask - parte 2
+1 min
+No se ha completado
+Reproducir
+389. Modificar Puerto de Flask
+2 min
+No se ha completado
+Reproducir
+390. ¿Qué es Postman
+2 min
+No se ha completado
+Reproducir
+391. Instalación de Postman
+2 min
+No se ha completado
+Reproducir
+392. Prueba del Listado con Postman
+2 min
+No se ha completado
+Reproducir
+393. Agregar Empleado con Postman
+2 min
+No se ha completado
+Reproducir
+394. Modificar Empleado con Postman
+2 min
+No se ha completado
+Reproducir
+395. Recuperar Empleado por Id con Postman
+1 min
+No se ha completado
+Reproducir
+396. Eliminar Empleado con Postman
+1 min
+No se ha completado
+Reproducir
+397. Conclusión del BackEnd con Flask
+1 min
+No se ha completado
+Reproducir
+398. ¿Qué es Angular
+2 min
+No se ha completado
+Reproducir
+399. ¿Qué es Node JS
+2 min
+No se ha completado
+Reproducir
+400. Instalación de Node JS
+2 min
+No se ha completado
+Reproducir
+401. Instalación de Visual Studio Code (VSC)
+2 min
+No se ha completado
+Reproducir
+402. Instalación de Angular
+6 min
+No se ha completado
+Reproducir
+403. Fases Creación del Front End con Angular
+7 min
+No se ha completado
+Reproducir
+404. Creación del Proyecto con Angular
+5 min
+No se ha completado
+Reproducir
+405. Agregar Bootstrap a Angular
+4 min
+No se ha completado
+Reproducir
+406. Modificar el Componente App principal de Angular
+5 min
+No se ha completado
+Reproducir
+407. Creación de la Clase de Entidad con Angular y TypeScript
+2 min
+No se ha completado
+Reproducir
+408. Creación de la Clase de Entidad con Angular y TypeScript
+5 min
+No se ha completado
+Reproducir
+409. Creación del Componente de Listado con Angular
+5 min
+No se ha completado
+Reproducir
+410. Creación de la Vista Listado de Productos con Angular
+3 min
+No se ha completado
+Reproducir
+411. Configuración de Rutas con Angular
+2 min
+No se ha completado
+Reproducir
+412. Listado con Angular
+4 min
+No se ha completado
+Reproducir
+413. Pipe Moneda con Angular
+4 min
+No se ha completado
+Reproducir
+414. Componente de Agregar con Angular
+6 min
+No se ha completado
+Reproducir
+415. Formulario de Agregar con Angular (Template driven)
+6 min
+No se ha completado
+Reproducir
+416. Barra de Navegación con Angular
+5 min
+No se ha completado
+Reproducir
+417. Prueba Agregar Empleado con Angular
+8 min
+No se ha completado
+Reproducir
+418. Cambiar Color Barra de Navegación con Angular
+2 min
+No se ha completado
+Reproducir
+419. Creación del Componente de Editar con Angular
+9 min
+No se ha completado
+Reproducir
+420. Creación del Formulario de Editar con Angular
+4 min
+No se ha completado
+Reproducir
+421. Actualizar Ruta Caso de Editar con Angular
+4 min
+No se ha completado
+Reproducir
+422. Prueba Caso Editar con Angular
+6 min
+No se ha completado
+Reproducir
+423. Caso de Eliminar - Componente de Listado con Angular
+4 min
+No se ha completado
+Reproducir
+424. Prueba Caso de Eliminar con Angular
+5 min
+No se ha completado
+Reproducir
+425. Demo Aplicación Web Full Stack con React, Django, Python y Mysql con ChatGPT
+3 min
+No se ha completado
+Reproducir
+426. ¿Qué es Django Framework
+3 min
+No se ha completado
+Reproducir
+427. ¿Qué es Django REST Framework (DRF) y el concepto de API
+3 min
+No se ha completado
+Reproducir
+428. Prompt de ChatGPT para crear el Backend con Django
+7 min
+No se ha completado
+Reproducir
+429. Ejecución del Prompt de ChatGPT para crear el Backend con Django
+3 min
+No se ha completado
+Reproducir
+430. Creación del Proyecto con Django
+3 min
+No se ha completado
+Reproducir
+431. Creación de la App de Django
+8 min
+No se ha completado
+Reproducir
+432. Configuración del archivo settings de Django
+7 min
+No se ha completado
+Reproducir
+433. Configuración de PyMySql en Django
+2 min
+No se ha completado
+Reproducir
+434. Configuración de la Base de Datos de MySql
+1 min
+No se ha completado
+Reproducir
+435. Modificación de la Clase de Entidad Empleado con Django
+5 min
+No se ha completado
+Reproducir
+436. Creación de la clase Empleado Serializer con Django
+6 min
+No se ha completado
+Reproducir
+437. Uso de Vistas Genéricas de Django
+6 min
+No se ha completado
+Reproducir
+438. Manejo de Rutas de la App de Empleado con Django
+9 min
+No se ha completado
+Reproducir
+439. Migraciones de la Base de Datos con Django
+5 min
+No se ha completado
+Reproducir
+440. Ejecución del Backend con Django
+6 min
+No se ha completado
+Reproducir
+441. Prueba del Listado con Postman
+2 min
+No se ha completado
+Reproducir
+442. Agregar Empleado con Postman
+2 min
+No se ha completado
+Reproducir
+443. Modificar Empleado con Postman
+2 min
+No se ha completado
+Reproducir
+444. Recuperar Empleado por Id con Postman
+1 min
+No se ha completado
+Reproducir
+445. Eliminar Empleado con Postman
+1 min
+No se ha completado
+Reproducir
+446. ¿Qué es React
+2 min
+No se ha completado
+Reproducir
+447. ¿Qué es un Componente de React
+4 min
+No se ha completado
+Reproducir
+448. Prompt de ChatGPT para crear nuestra App con React
+5 min
+No se ha completado
+Reproducir
+449. Fase Inicial de React
+2 min
+No se ha completado
+Reproducir
+450. Creación del Proyecto con React
+6 min
+No se ha completado
+Reproducir
+451. Modificación de la Configuración Inicial de React
+8 min
+No se ha completado
+Reproducir
+452. Revisión del Componente App con React
+4 min
+No se ha completado
+Reproducir
+453. Caso de Listar - Configuración con React
+6 min
+No se ha completado
+Reproducir
+454. Listado de Empleados - Componente con React
+4 min
+No se ha completado
+Reproducir
+455. Listado de Empleados - Explicación con ChatGPT - parte 1
+7 min
+No se ha completado
+Reproducir
+456. Listado de Empleados - Explicación con ChatGPT - parte 2
+8 min
+No se ha completado
+Reproducir
+457. Caso de Agregar con React y ChatGPT
+4 min
+No se ha completado
+Reproducir
+458. Componente de Navegación con Bootstrap y React
+3 min
+No se ha completado
+Reproducir
+459. Agregar Empleado con React
+5 min
+No se ha completado
+Reproducir
+460. Agregar Empleado Explicación con ChatGPT
+9 min
+No se ha completado
+Reproducir
+461. Caso Editar Empleado con ChatGPT y React
+9 min
+No se ha completado
+Reproducir
+462. Editar Empleado con React - Explicación
+7 min
+No se ha completado
+Reproducir
+463. Caso Eliminar Empleado con React
+6 min
+No se ha completado
+Reproducir
+464. Demo Aplicación Django Songs con ChatGPT
+4 min
+No se ha completado
+Reproducir
+465. Prompt ChatGPT App Django
+2 min
+No se ha completado
+Reproducir
+466. Instalar las librerías de Django y MySql en PyCharm
+3 min
+No se ha completado
+Reproducir
+467. Creación del Proyecto App Django
+6 min
+No se ha completado
+Reproducir
+468. Explicación Proyecto App Django
+8 min
+No se ha completado
+Reproducir
+469. Fase 1 App Django parte 2
+11 min
+No se ha completado
+Reproducir
+470. Fase 2 - Conexión a MySql
+9 min
+No se ha completado
+Reproducir
+471. Fase 3 - Creación Clase de Modelo con ORM Django
+8 min
+No se ha completado
+Reproducir
+472. Fase 3 - Panel Admin Django
+4 min
+No se ha completado
+Reproducir
+473. Fase 4 - Listado de Canciones
+12 min
+No se ha completado
+Reproducir
+474. Fase 5 - Agregar Canción
+9 min
+No se ha completado
+Reproducir
+475. Fase 5 - Agregar Canción - continuación
+12 min
+No se ha completado
+Reproducir
+476. Fase 6 - Editar Canción
+7 min
+No se ha completado
+Reproducir
+477. Fase 6 - Editar Canción - parte 2
+8 min
+No se ha completado
+Reproducir
+478. Eliminar Canción con Django, MySql y ChatGPT
+11 min
+No se ha completado
+Reproducir
+479. Demo Aplicación con Flet (Escritorio, Web y Móvil), MySQL y ChatGPT
+4 min
+No se ha completado
+Reproducir
+480. ¿Qué es Flet (Flutter + Python)
+4 min
+No se ha completado
+Reproducir
+481. Ejecución del Prompt para crear la aplicación con Flet
+3 min
+No se ha completado
+Reproducir
+482. Fase 1 - Creación del Proyecto Flet con PyCharm
+6 min
+No se ha completado
+Reproducir
+483. Fase 1 - Creación de la Ventana Inicial con Flet
+6 min
+No se ha completado
+Reproducir
+484. Fase 2 - Conexión a MySql
+7 min
+No se ha completado
+Reproducir
+485. Fase 3 - Creación Clase de Modelo
+6 min
+No se ha completado
+Reproducir
+486. Migraciones Automáticas con Sql Alchemy y Alembic
+9 min
+No se ha completado
+Reproducir
+487. Listado de Películas con Flet
+7 min
+No se ha completado
+Reproducir
+488. Refactorizacion de la Aplicación con Flet
+6 min
+No se ha completado
+Reproducir
+489. Barra de Navegación con Flet
+5 min
+No se ha completado
+Reproducir
+490. Formulario Agregar Nueva Película
+6 min
+No se ha completado
+Reproducir
+491. Guardar Nueva Película con Flet
+9 min
+No se ha completado
+Reproducir
+492. Editar Servicio por Id
+4 min
+No se ha completado
+Reproducir
+493. Precargar Formulario para Editar Película
+6 min
+No se ha completado
+Reproducir
+494. Guardar Película Existente
+9 min
+No se ha completado
+Reproducir
+495. Agregar Botón para Editar Película
+7 min
+No se ha completado
+Reproducir
+496. Eliminar Película con Flet
+10 min
+No se ha completado
+Reproducir
+497. Mejoras en las Validaciones del Formulario con Flet
+7 min
+No se ha completado
+Reproducir
+498. Despliegue de la App Web con Flet
+7 min
+No se ha completado
+Reproducir
+499. Demo Aplicación con PySide (App Escritorio), MySQL y ChatGPT
+3 min
+No se ha completado
+Reproducir
+500. ¿Qué es PySide
+3 min
+No se ha completado
+Reproducir
+501. Ejecución del Prompt de ChatGPT para crear la app con PySide y MySql
+2 min
+No se ha completado
+Reproducir
+502. Creación del Proyecto y Actualización de la versión de Python
+5 min
+No se ha completado
+Reproducir
+503. Instalación de Librerías del Proyecto
+3 min
+No se ha completado
+Reproducir
+504. Creación primera pantalla con PySide
+6 min
+No se ha completado
+Reproducir
+505. Configuración de Conexión a MySql
+7 min
+No se ha completado
+Reproducir
+506. Creación de la Clase de Modelo
+5 min
+No se ha completado
+Reproducir
+507. Migraciones Automáticas con Alembic y Sql Alchemy
+8 min
+No se ha completado
+Reproducir
+508. Listado de Mascotas
+8 min
+No se ha completado
+Reproducir
+509. Refactorización - Creación de Capas Lógicas
+10 min
+No se ha completado
+Reproducir
+510. Menú de Navegación con PySide
+7 min
+No se ha completado
+Reproducir
+511. Agregar Formulario con PySide
+6 min
+No se ha completado
+Reproducir
+512. Guardar Nueva Mascota
+13 min
+No se ha completado
+Reproducir
+513. Seleccionar Mascota a Editar
+6 min
+No se ha completado
+Reproducir
+514. Servicio Obtener Mascota por Id
+4 min
+No se ha completado
+Reproducir
+515. Precargar Formulario a Editar Mascota
+8 min
+No se ha completado
+Reproducir
+516. Guardar Mascota Modificada
+9 min
+No se ha completado
+Reproducir
+517. Eliminar Mascota Existente
+8 min
+No se ha completado
+Reproducir
+518. Conclusión del curso con PySide, MySql y ChatGPT
+5 min
+No se ha completado
+Reproducir
+519. Demo App Full Stack con React + Fast API + MySql + ChatGPT
+4 min
+No se ha completado
+Reproducir
+520. ¿Qué es Fast API
+3 min
+No se ha completado
+Reproducir
+521. Ejecución del Prompt para crear el Backend con Fast API
+2 min
+No se ha completado
+Reproducir
+522. Fase 1 - Creación del Proyecto Back con Fast API
+5 min
+No se ha completado
+Reproducir
+523. Fase 2 - Estructura base de la App Inicial
+6 min
+No se ha completado
+Reproducir
+524. Fase 3 - Conexión a MySql
+8 min
+No se ha completado
+Reproducir
+525. Fase 4 Creación de la Clase de Modelo
+5 min
+No se ha completado
+Reproducir
+526. Fase 5 Migraciones con Alembic
+9 min
+No se ha completado
+Reproducir
+527. Fase 6 Validaciones con Pydantic
+5 min
+No se ha completado
+Reproducir
+528. Diagramas con Explicación de Pydantic
+2 min
+No se ha completado
+Reproducir
+529. Fase 7 Capa de Servicio - Listar
+3 min
+No se ha completado
+Reproducir
+530. Diagrama de la Capa de Servicio
+1 min
+No se ha completado
+Reproducir
+531. Fase 8 Ruta de Listar con Fast API
+7 min
+No se ha completado
+Reproducir
+532. Fase 9 Prueba de Listar
+6 min
+No se ha completado
+Reproducir
+533. Fase 10 Servicio Crear
+4 min
+No se ha completado
+Reproducir
+534. Fase 11 Router Crear
+4 min
+No se ha completado
+Reproducir
+535. Fase 12 Prueba Caso Crear
+4 min
+No se ha completado
+Reproducir
+536. Fase 13 Servicio Buscar por ID
+3 min
+No se ha completado
+Reproducir
+537. Fase 14 Router Buscar por ID
+4 min
+No se ha completado
+Reproducir
+538. Fase 15 Prueba Buscar por ID
+4 min
+No se ha completado
+Reproducir
+539. Fase 16 Servicio Actualizar
+4 min
+No se ha completado
+Reproducir
+540. Fase 17 Router Actualizar
+4 min
+No se ha completado
+Reproducir
+541. Fase 18 Prueba Actualizar
+5 min
+No se ha completado
+Reproducir
+542. Fase 19 Servicio Eliminar
+2 min
+No se ha completado
+Reproducir
+543. Fase 20 Router Eliminar
+3 min
+No se ha completado
+Reproducir
+544. Fase 21 Prueba Eliminar
+3 min
+No se ha completado
+Reproducir
+545. Fase 22 Configuración CORS
+4 min
+No se ha completado
+Reproducir
+546. Fase 23 Configuracion Puerto
+4 min
+No se ha completado
+Reproducir
+547. Conclusión Back End con Fast API
+1 min
+No se ha completado
+Reproducir
+548. Ejecución de Prompt Front End con React
+2 min
+No se ha completado
+Reproducir
+549. Fase 1 Creación del Proyecto con React + Vite
+7 min
+No se ha completado
+Reproducir
+550. Fase 2 Agregar Bootstrap Modo Oscuro
+7 min
+No se ha completado
+Reproducir
+551. Fase 3 Crear Archivo de Libros con Axios
+3 min
+No se ha completado
+Reproducir
+552. Fase 4 Servicio de Listar Libros
+3 min
+No se ha completado
+Reproducir
+553. Fase 5 Componente de Listar Libros
+4 min
+No se ha completado
+Reproducir
+554. Fase 6 Tabla de Listado de Libros
+7 min
+No se ha completado
+Reproducir
+555. Fase 7 Instalar Router Barra de Navegación
+7 min
+No se ha completado
+Reproducir
+556. Fase 8 Componente Crear Libro
+6 min
+No se ha completado
+Reproducir
+557. Fase 9 Servicio Agregar Libro
+4 min
+No se ha completado
+Reproducir
+558. Fase 10 Enviar Nuevo Libro
+7 min
+No se ha completado
+Reproducir
+559. Fase 11 Servicio Buscar Por Id
+3 min
+No se ha completado
+Reproducir
+560. Fase 12 Agregar Botón de Editar
+5 min
+No se ha completado
+Reproducir
+561. Fase 13 Formulario Editar Libro
+4 min
+No se ha completado
+Reproducir
+562. Fase 14 Precargar Datos de Formulario de Editar Libro
+6 min
+No se ha completado
+Reproducir
+563. Fase 15 Servicio Actualizar Libro
+3 min
+No se ha completado
+Reproducir
+564. Fase 16 Actualizar Libro
+4 min
+No se ha completado
+Reproducir
+565. Fase 17 Servicio Eliminar Libro
+3 min
+No se ha completado
+Reproducir
+566. Fase 18 Eliminar Libro
+6 min
+No se ha completado
+Reproducir
+567. Conclusión del Proyecto Full Stack React + Fast API + Python + MySql + ChatGPT
+2 min
+No se ha completado
+Iniciar
+568. Nota de estas secciones del Curso de Python
+1 min
+No se ha completado
+Reproducir
+569. Introducción a Python y uso de Variables
+56 min
+No se ha completado
+Reproducir
+570. Manejo de Cadenas con Python
+1 h 17 min
+No se ha completado
+Reproducir
+571. Herencia Múltiple y POO en Python
+1 h 41 min
+No se ha completado
+Reproducir
+572. Sobrecarga, Polimorfismo y más temas POO
+1 h 49 min
+No se ha completado
+Reproducir
+573. Manejo de Excepciones y Archivos en Python
+1 h 32 min
+No se ha completado
+Reproducir
+574. Conexión a Base de Datos con Python y Postgresql - parte 1
+1 h 4 min
+No se ha completado
+Reproducir
+575. Conexión a Base de Datos con Python y Postgresql - parte 2
+1 h 30 min
+No se ha completado
+Reproducir
+576. Conexión a Base de Datos con Python y Postgresql - parte 3
+1 h 30 min
+No se ha completado
+Reproducir
+577. Profundizando en Python - Tipos de Datos
+54 min
+No se ha completado
+Reproducir
+578. Profundizando en Python - Cadenas
+2 h 31 min
+No se ha completado
+Reproducir
+579. Profundizando en Python - REPL, Unpacking y Colecciones
+2 h 55 min
+No se ha completado
+Reproducir
+580. Profundizando en Python - Funciones
+2 h 22 min
+No se ha completado
+Reproducir
+581. Profundizando en Python - Palabras reservadas, Clases y Objetos
+1 h 39 min
+No se ha completado
+Reproducir
+582. Profundizando en Python - Más de Clases y Objetos y JSON
+2 h 2 min
+No se ha completado
+Reproducir
+583. Tips and Tricks en Python - parte 1
+2 h 21 min
+No se ha completado
+Reproducir
+584. Tips and Tricks en Python - parte 2
+2 h 21 min
+No se ha completado
+Reproducir
+585. Tips and Tricks en Python - parte 3
+3 h 1 min
+No se ha completado
+Reproducir
+586. Introducción a Tkinter y componentes básicos
+2 h 12 min
+No se ha completado
+Reproducir
+587. Componentes de Tkinter
+1 h 4 min
+No se ha completado
+Reproducir
+588. Aplicación Calculadora con Tkinter
+1 h 7 min
+No se ha completado
+Reproducir
+589. Aplicación Editor Texto con Tkinter
+1 h 2 min
+No se ha completado
+Reproducir
+590. Introducción a PySide, Signals y Slots
+1 h 11 min
+No se ha completado
+Reproducir
+591. Widgets con PySide
+1 h 31 min
+No se ha completado
+Reproducir
+592. Layouts con PySide
+1 h 3 min
+No se ha completado
+Reproducir
+593. Barra de Herramientas y Dialogos con PySide
+1 h 23 min
+No se ha completado
+Reproducir
+594. Ventanas y Eventos con PySide
+1 h
+No se ha completado
+Reproducir
+595. Aplicación de Calculadora con PySide
+52 min
+No se ha completado
+Reproducir
+596. Django Introducción - Creación App Web y Migraciones
+1 h 37 min
+No se ha completado
+Reproducir
+597. Django Templeates aplicación Web SAP con Django
+1 h 45 min
+No se ha completado
+Reproducir
+598. Introducción a Flask y Manejo de Plantillas (Templates)
+1 h 48 min
+No se ha completado
+Reproducir
+599. Sistema SAP con Flask
+1 h 45 min
+No se ha completado
+Iniciar
+600. Cursos Bonos Extra - HTML y CSS
+1 min
+No se ha completado
+Reproducir
+601. Introducción a HTML
+33 min
+No se ha completado
+Reproducir
+602. Elementos Básicos en HTML
+1 h 7 min
+No se ha completado
+Reproducir
+603. HTML con CSS
+50 min
+No se ha completado
+Reproducir
+604. Links en HTML y CSS
+28 min
+No se ha completado
+Reproducir
+605. Tablas en HTML
+23 min
+No se ha completado
+Reproducir
+606. Listas en HTML
+26 min
+No se ha completado
+Reproducir
+607. Elementos inline y block en HTML
+53 min
+No se ha completado
+Reproducir
+608. Formularios en HTML
+1 h 24 min
+No se ha completado
+Reproducir
+609. Elementos Semánticos en HTML
+22 min
+No se ha completado
+Reproducir
+610. Introducción a CSS
+1 h 13 min
+No se ha completado
+Reproducir
+611. Box Model en CSS
+45 min
+No se ha completado
+Reproducir
+612. Códigos de Colores, Fondos y Formato de Texto en CSS
+1 h 1 min
+No se ha completado
+Reproducir
+613. Fuentes en CSS
+50 min
+No se ha completado
+Reproducir
+614. Íconos de Bootstrap en CSS
+38 min
+No se ha completado
+Reproducir
+615. Manejo y Posicionamiento de Elementos div en CSS
+1 h 22 min
+No se ha completado
+Reproducir
+616. Selectores Descendientes en CSS
+43 min
+No se ha completado
+Reproducir
+617. Manejo de Gradientes y Flexbox en CSS
+54 min
+No se ha completado
+Iniciar
+618. Clase Extra
+4 min
+
