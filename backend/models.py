@@ -1,6 +1,14 @@
+import os
+import sys
+sys.path.insert(0, os.path.dirname(__file__))
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, Float
 from datetime import datetime
-from database import Base
+
+try:
+    from database import Base
+except ImportError:
+    from backend.database import Base
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
