@@ -3,6 +3,289 @@
  * Frontend Single Page Application (Compatible con iPhone 7 / Safari iOS 15 & GitHub Pages)
  */
 
+// ==================== WEB AUDIO API SYNTHESIZER (ZERO-ASSETS) ====================
+class SoundFX {
+  constructor() {
+    this.ctx = null;
+    this.enabled = localStorage.getItem("PYTHON_MASTER_SOUND") !== "false";
+  }
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  }
+
+  toggle() {
+    this.enabled = !this.enabled;
+    localStorage.setItem("PYTHON_MASTER_SOUND", this.enabled ? "true" : "false");
+    return this.enabled;
+  }
+
+  playTap() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(80, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.02);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.02);
+      if (navigator.vibrate) navigator.vibrate(10);
+    } catch (e) {}
+  }
+
+  playSnap() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(340, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(680, this.ctx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.04);
+      if (navigator.vibrate) navigator.vibrate(15);
+    } catch (e) {}
+  }
+
+  playRemove() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(220, this.ctx.currentTime + 0.03);
+      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.03);
+    } catch (e) {}
+  }
+
+  playIndent() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(950, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.015);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.015);
+    } catch (e) {}
+  }
+
+  playSuccess() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, i) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.07);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime + i * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + i * 0.07 + 0.25);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(this.ctx.currentTime + i * 0.07);
+        osc.stop(this.ctx.currentTime + i * 0.07 + 0.25);
+      });
+      if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
+    } catch (e) {}
+  }
+
+  playQuizCorrect() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const notes = [587.33, 739.99, 880.00]; // D5, F#5, A5
+      notes.forEach((freq, i) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.06);
+        gain.gain.setValueAtTime(0.18, this.ctx.currentTime + i * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + i * 0.06 + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(this.ctx.currentTime + i * 0.06);
+        osc.stop(this.ctx.currentTime + i * 0.06 + 0.2);
+      });
+    } catch (e) {}
+  }
+
+  playError() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+      osc.frequency.setValueAtTime(110, this.ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.2);
+      if (navigator.vibrate) navigator.vibrate(40);
+    } catch (e) {}
+  }
+}
+
+// ==================== ZERO-DOM HIGH PERFORMANCE CANVAS PARTICLES ====================
+class FXParticleEngine {
+  constructor(canvasId = "fxCanvas") {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas ? this.canvas.getContext("2d") : null;
+    this.particles = [];
+    this.texts = [];
+    this.animId = null;
+
+    if (this.canvas) {
+      this.resize();
+      window.addEventListener("resize", () => this.resize());
+    }
+  }
+
+  resize() {
+    if (!this.canvas) return;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  spawn(x, y, count = 35, colors = ["#f59e0b", "#38bdf8", "#10b981", "#ffffff"]) {
+    if (!this.canvas || !this.ctx) return;
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 6 + 2;
+      this.particles.push({
+        x: x || window.innerWidth / 2,
+        y: y || window.innerHeight / 2,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        size: Math.random() * 4 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: Math.random() * 0.025 + 0.015,
+        gravity: 0.15
+      });
+    }
+    this.startLoop();
+  }
+
+  spawnText(x, y, text, color = "#f59e0b") {
+    if (!this.canvas || !this.ctx) return;
+    this.texts.push({
+      x: x || window.innerWidth / 2,
+      y: y || window.innerHeight / 2,
+      text: text,
+      color: color,
+      alpha: 1,
+      vy: -1.8,
+      decay: 0.018
+    });
+    this.startLoop();
+  }
+
+  startLoop() {
+    if (!this.animId) {
+      this.animId = requestAnimationFrame(() => this.loop());
+    }
+  }
+
+  loop() {
+    if (!this.ctx) return;
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= 0.98;
+      p.alpha -= p.decay;
+
+      if (p.alpha <= 0) {
+        this.particles.splice(i, 1);
+        continue;
+      }
+
+      this.ctx.save();
+      this.ctx.globalAlpha = Math.max(0, p.alpha);
+      this.ctx.fillStyle = p.color;
+      this.ctx.shadowBlur = 6;
+      this.ctx.shadowColor = p.color;
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    for (let i = this.texts.length - 1; i >= 0; i--) {
+      const t = this.texts[i];
+      t.y += t.vy;
+      t.alpha -= t.decay;
+
+      if (t.alpha <= 0) {
+        this.texts.splice(i, 1);
+        continue;
+      }
+
+      this.ctx.save();
+      this.ctx.globalAlpha = Math.max(0, t.alpha);
+      this.ctx.font = "bold 20px 'Inter', sans-serif";
+      this.ctx.fillStyle = t.color;
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = t.color;
+      this.ctx.textAlign = "center";
+      this.ctx.fillText(t.text, t.x, t.y);
+      this.ctx.restore();
+    }
+
+    if (this.particles.length > 0 || this.texts.length > 0) {
+      this.animId = requestAnimationFrame(() => this.loop());
+    } else {
+      this.animId = null;
+    }
+  }
+}
+
 class AppController {
   constructor() {
     // Detección de URL base de la API
@@ -42,6 +325,11 @@ class AppController {
     this.currentLessonId = null;
     this.isBackendOnline = false;
 
+    // Motores de Audio y Partículas
+    this.sound = new SoundFX();
+    this.fx = null;
+    this.ghostDuel = null;
+
     // Estado del Sistema de Rompecabezas (Parsons Problems)
     this.currentPuzzleLesson = null;
     this.puzzleState = {
@@ -53,6 +341,13 @@ class AppController {
   }
 
   async init() {
+    this.fx = new FXParticleEngine("fxCanvas");
+    this.updateSoundButtonUI();
+
+    // Desbloquear audio en la primera interacción (iOS / Safari)
+    document.addEventListener("click", () => this.sound.init(), { once: true });
+    document.addEventListener("touchstart", () => this.sound.init(), { once: true });
+
     this.updateAuthButtonUI();
     this.updateHeaderStats();
     
@@ -387,8 +682,16 @@ class AppController {
   }
 
   async addXP(amount, reason = "Reto superado") {
+    const oldLevel = this.user.level;
     this.user.xp += amount;
     
+    // Efectos audiovisuales instantáneos (Web Audio API + Canvas Partículas)
+    if (this.sound) this.sound.playSuccess();
+    if (this.fx) {
+      this.fx.spawn(window.innerWidth / 2, 90, 35, ["#f59e0b", "#38bdf8", "#10b981", "#ffffff"]);
+      this.fx.spawnText(window.innerWidth / 2, 130, `+${amount} XP!`, "#f59e0b");
+    }
+
     // Cálculo de nivel local
     if (this.user.xp >= 3200) {
       this.user.level = 6;
@@ -405,6 +708,11 @@ class AppController {
     } else if (this.user.xp >= 200) {
       this.user.level = 2;
       this.user.rankTitle = "Explorador de Bucles";
+    }
+
+    if (this.user.level > oldLevel && this.fx) {
+      this.fx.spawn(window.innerWidth / 2, window.innerHeight / 2, 60, ["#f59e0b", "#38bdf8", "#10b981", "#ffffff"]);
+      this.fx.spawnText(window.innerWidth / 2, window.innerHeight / 2 - 30, `¡SUBISTE A NIVEL ${this.user.level}!`, "#38bdf8");
     }
 
     if (this.currentUser) {
@@ -587,6 +895,8 @@ class AppController {
       return;
     }
 
+    if (this.sound) this.sound.playTap();
+
     const hasPuzzle = lesson.exercise && Array.isArray(lesson.exercise.puzzle_pieces) && lesson.exercise.puzzle_pieces.length > 0;
     if (hasPuzzle) {
       this.currentPuzzleLesson = lesson;
@@ -595,7 +905,16 @@ class AppController {
         ...(lesson.exercise.puzzle_distractors || [])
       ];
       this.puzzleState = {
-        pool: rawPieces.map((p, idx) => ({ id: `p_${idx}`, text: p })).sort(() => Math.random() - 0.5),
+        pool: rawPieces.map((p, idx) => {
+          const m = p.match(/^(\s+)/);
+          const rawSpaces = m ? m[1].length : 0;
+          const initialIndent = Math.min(3, Math.floor(rawSpaces / 4));
+          return {
+            id: `p_${idx}`,
+            text: p.trim(),
+            indent: initialIndent
+          };
+        }).sort(() => Math.random() - 0.5),
         assembled: []
       };
     }
@@ -654,20 +973,20 @@ class AppController {
 
         ${hasPuzzle ? `
           <div class="editor-mode-tabs" style="margin-top: 12px; margin-bottom: 10px;">
-            <button id="btnModePuzzle" class="editor-mode-btn active" onclick="app.switchEditorMode('puzzle')">🧩 Armar Rompecabezas (Bloques)</button>
+            <button id="btnModePuzzle" class="editor-mode-btn active" onclick="app.switchEditorMode('puzzle')">🧩 Armar Rompecabezas (2D Bloques)</button>
             <button id="btnModeCode" class="editor-mode-btn" onclick="app.switchEditorMode('code')">💻 Escribir Código Libre</button>
           </div>
 
-          <!-- Modo Rompecabezas de Código -->
+          <!-- Modo Rompecabezas de Código 2D -->
           <div id="puzzleViewSection" class="puzzle-container">
             <div class="puzzle-section-label">
-              <span>📦 Piezas Disponibles (Toca para agregar a tu solución):</span>
+              <span>📦 Piezas Disponibles (Toca para agregar):</span>
               <button class="btn-secondary" style="font-size: 0.7rem; padding: 2px 8px;" onclick="app.resetPuzzle()">🔄 Reiniciar</button>
             </div>
             <div id="puzzlePool" class="puzzle-pool"></div>
 
             <div class="puzzle-section-label" style="margin-top: 12px;">
-              <span>🧩 Función Ensamblada (Toca una pieza para retirarla):</span>
+              <span>🧩 Función Ensamblada (Usa ◀ / ▶ para ajustar la indentación):</span>
             </div>
             <div id="puzzleDropzone" class="puzzle-dropzone"></div>
 
@@ -680,6 +999,20 @@ class AppController {
 
         <!-- Modo Editor de Código Libre -->
         <div id="codeViewSection" style="${hasPuzzle ? 'display: none;' : ''}">
+          <!-- Barra Ergonómica de Símbolos Python para Móvil -->
+          <div class="code-accessory-bar">
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('    ')">Tab</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(':')">:</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('()', 1)">( )</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('\'\'', 1)">' '</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('\"\"', 1)">" "</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('[]', 1)">[ ]</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(' == ')">==</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('def ')">def</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('return ')">return</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(' -> ')">-&gt;</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('print()', 1)">print()</button>
+          </div>
           <textarea id="lessonCodeEditor" class="code-editor-area">${lesson.exercise.starter_code}</textarea>
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
@@ -715,12 +1048,18 @@ class AppController {
     feedback.style.display = "block";
 
     if (selectedIdx === correctIdx) {
+      if (this.sound) this.sound.playQuizCorrect();
+      if (this.fx) {
+        this.fx.spawn(window.innerWidth / 2, window.innerHeight / 2, 35, ["#34d399", "#f59e0b", "#ffffff"]);
+        this.fx.spawnText(window.innerWidth / 2, window.innerHeight / 2 - 40, "¡RESPUESTA CORRECTA!", "#34d399");
+      }
       feedback.style.background = "rgba(16, 185, 129, 0.15)";
       feedback.style.border = "1px solid rgba(16, 185, 129, 0.4)";
       feedback.style.color = "#34d399";
       feedback.innerHTML = `<strong>✅ ¡Correcto! (+20 XP)</strong><br>${explanation}`;
       this.addXP(20, "Respuesta correcta en Quizz");
     } else {
+      if (this.sound) this.sound.playError();
       feedback.style.background = "rgba(239, 68, 68, 0.15)";
       feedback.style.border = "1px solid rgba(239, 68, 68, 0.4)";
       feedback.style.color = "#f87171";
@@ -729,10 +1068,11 @@ class AppController {
   }
 
   async executeLessonCode(blockId, lessonId) {
+    if (this.sound) this.sound.playTap();
     const code = document.getElementById("lessonCodeEditor").value;
     const term = document.getElementById("codeTerminalOutput");
     term.style.display = "block";
-    term.innerHTML = "⏳ Ejecutando en entorno aislado...";
+    term.innerHTML = "⏳ Ejecutando en sandbox aislado de CPython...";
 
     try {
       const res = await fetch(this.apiUrl("/api/execute"), {
@@ -743,7 +1083,12 @@ class AppController {
       const data = await res.json();
 
       if (data.passed) {
-        term.innerHTML = `<span style="color: #34d399;">✅ ¡TESTS PASADOS EXITOSAMENTE! (+50 XP)</span><br><br>${data.stdout ? data.stdout : 'Sin salida estándar.'}`;
+        if (this.sound) this.sound.playSuccess();
+        if (this.fx) {
+          this.fx.spawn(window.innerWidth / 2, window.innerHeight / 2, 50, ["#38bdf8", "#f59e0b", "#10b981", "#ffffff"]);
+          this.fx.spawnText(window.innerWidth / 2, window.innerHeight / 2 - 50, "¡TESTS PASADOS! +50 XP", "#38bdf8");
+        }
+        term.innerHTML = `<span style="color: #34d399; font-weight: 800;">✅ ¡TESTS PASADOS EXITOSAMENTE! (+50 XP)</span><br><br>${data.stdout ? data.stdout : 'Sin salida estándar.'}`;
         this.addXP(50, "Reto de código superado");
         
         if (!this.user.completedLessons.includes(lessonId)) {
@@ -760,15 +1105,18 @@ class AppController {
           this.updateHeaderStats();
         }
       } else {
-        term.innerHTML = `<span style="color: #f87171;">❌ PRUEBAS FALLIDAS:</span><br><pre style="color: #cbd5e1; margin-top: 4px;">${data.stderr || data.stdout || 'La prueba de aserción no se cumplió.'}</pre>`;
+        if (this.sound) this.sound.playError();
+        term.innerHTML = `<span style="color: #f87171; font-weight: 700;">❌ PRUEBAS FALLIDAS:</span><br><pre style="color: #cbd5e1; margin-top: 4px;">${data.stderr || data.stdout || 'La prueba de aserción no se cumplió.'}</pre>`;
       }
     } catch (e) {
+      if (this.sound) this.sound.playError();
       term.innerHTML = `<span style="color: #f87171;">Nota: Para ejecutar código Python real en el servidor se requiere conectar el Backend en Render (pulsa ⚙️).</span>`;
     }
   }
 
-  // ==================== MÉTODOS DEL MODO ROMPECABEZAS (PARSONS) ====================
+  // ==================== MÉTODOS DEL MODO ROMPECABEZAS (PARSONS 2D) ====================
   switchEditorMode(mode) {
+    if (this.sound) this.sound.playTap();
     const btnPuzzle = document.getElementById("btnModePuzzle");
     const btnCode = document.getElementById("btnModeCode");
     const puzzleSec = document.getElementById("puzzleViewSection");
@@ -795,7 +1143,7 @@ class AppController {
     // Renderizar piezas disponibles
     poolEl.innerHTML = "";
     if (this.puzzleState.pool.length === 0) {
-      poolEl.innerHTML = `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; padding: 4px;">¡Todas las piezas han sido agregadas!</span>`;
+      poolEl.innerHTML = `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; padding: 4px;">¡Todas las piezas han sido agregadas a la solución!</span>`;
     } else {
       this.puzzleState.pool.forEach((piece) => {
         const item = document.createElement("div");
@@ -809,26 +1157,40 @@ class AppController {
       });
     }
 
-    // Renderizar piezas ensambladas
+    // Renderizar piezas ensambladas con controles 2D de indentación
     dropEl.innerHTML = "";
-    this.puzzleState.assembled.forEach((piece, idx) => {
-      const item = document.createElement("div");
-      item.className = "puzzle-piece-assembled";
-      item.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: var(--accent-gold); font-weight: 700; font-size: 0.75rem;">${idx + 1}.</span>
-          <code>${this.escapeHtml(piece.text)}</code>
-        </div>
-        <span class="piece-tag-remove">✖ Quitar</span>
-      `;
-      item.onclick = () => this.removePuzzlePiece(piece.id);
-      dropEl.appendChild(item);
-    });
+    if (this.puzzleState.assembled.length === 0) {
+      dropEl.innerHTML = `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; padding: 8px;">Toca piezas arriba para ensamblar. Usa ◀ / ▶ para ajustar la indentación de Python.</span>`;
+    } else {
+      this.puzzleState.assembled.forEach((piece, idx) => {
+        const item = document.createElement("div");
+        item.className = "puzzle-piece-assembled";
+        const indentGuide = piece.indent > 0 
+          ? `margin-left: ${piece.indent * 20}px; border-left: 3px solid #38bdf8;` 
+          : `border-left: 3px solid #10b981;`;
+        item.style = indentGuide;
+
+        item.innerHTML = `
+          <div class="puzzle-piece-content">
+            <span style="color: var(--accent-gold); font-weight: 700; font-size: 0.72rem; min-width: 18px;">${idx + 1}.</span>
+            <code>${this.escapeHtml(piece.text)}</code>
+          </div>
+          <div class="indent-controls">
+            <button type="button" class="btn-indent" onclick="event.stopPropagation(); app.adjustPuzzleIndent('${piece.id}', -1)" title="Reducir sangría">◀</button>
+            <span class="indent-level-badge">${piece.indent === 0 ? 'Base' : 'Niv ' + piece.indent}</span>
+            <button type="button" class="btn-indent" onclick="event.stopPropagation(); app.adjustPuzzleIndent('${piece.id}', 1)" title="Aumentar sangría">▶</button>
+            <button type="button" class="btn-remove-piece" onclick="event.stopPropagation(); app.removePuzzlePiece('${piece.id}')" title="Quitar pieza">✖</button>
+          </div>
+        `;
+        dropEl.appendChild(item);
+      });
+    }
   }
 
   selectPuzzlePiece(pieceId) {
     const idx = this.puzzleState.pool.findIndex(p => p.id === pieceId);
     if (idx !== -1) {
+      if (this.sound) this.sound.playSnap();
       const [piece] = this.puzzleState.pool.splice(idx, 1);
       this.puzzleState.assembled.push(piece);
       this.renderPuzzleUI();
@@ -838,30 +1200,51 @@ class AppController {
   removePuzzlePiece(pieceId) {
     const idx = this.puzzleState.assembled.findIndex(p => p.id === pieceId);
     if (idx !== -1) {
+      if (this.sound) this.sound.playRemove();
       const [piece] = this.puzzleState.assembled.splice(idx, 1);
       this.puzzleState.pool.push(piece);
       this.renderPuzzleUI();
     }
   }
 
+  adjustPuzzleIndent(pieceId, delta) {
+    const piece = this.puzzleState.assembled.find(p => p.id === pieceId);
+    if (piece) {
+      piece.indent = Math.max(0, Math.min(3, (piece.indent || 0) + delta));
+      if (this.sound) this.sound.playIndent();
+      this.renderPuzzleUI();
+    }
+  }
+
   resetPuzzle() {
+    if (this.sound) this.sound.playTap();
     if (!this.currentPuzzleLesson || !this.currentPuzzleLesson.exercise) return;
     const rawPieces = [
       ...this.currentPuzzleLesson.exercise.puzzle_pieces,
       ...(this.currentPuzzleLesson.exercise.puzzle_distractors || [])
     ];
     this.puzzleState = {
-      pool: rawPieces.map((p, idx) => ({ id: `p_${idx}`, text: p })).sort(() => Math.random() - 0.5),
+      pool: rawPieces.map((p, idx) => {
+        const m = p.match(/^(\s+)/);
+        const rawSpaces = m ? m[1].length : 0;
+        const initialIndent = Math.min(3, Math.floor(rawSpaces / 4));
+        return {
+          id: `p_${idx}`,
+          text: p.trim(),
+          indent: initialIndent
+        };
+      }).sort(() => Math.random() - 0.5),
       assembled: []
     };
     this.renderPuzzleUI();
   }
 
   getAssembledPuzzleCode() {
-    return this.puzzleState.assembled.map(p => p.text).join("\n");
+    return this.puzzleState.assembled.map(p => '    '.repeat(p.indent || 0) + p.text.trim()).join("\n");
   }
 
   transferPuzzleToEditor() {
+    if (this.sound) this.sound.playTap();
     const code = this.getAssembledPuzzleCode();
     const editor = document.getElementById("lessonCodeEditor");
     if (editor && code.trim()) {
@@ -871,6 +1254,7 @@ class AppController {
   }
 
   async testPuzzleSolution(blockId, lessonId) {
+    if (this.sound) this.sound.playTap();
     const code = this.getAssembledPuzzleCode();
     if (!code.trim()) {
       alert("Arma al menos una o más piezas antes de probar la solución.");
@@ -881,6 +1265,174 @@ class AppController {
       editor.value = code;
     }
     await this.executeLessonCode(blockId, lessonId);
+  }
+
+  insertSymbol(symbol, cursorOffset = 0, targetId = "lessonCodeEditor") {
+    if (this.sound) this.sound.playTap();
+    const textarea = document.getElementById(targetId);
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const val = textarea.value;
+
+    textarea.value = val.substring(0, start) + symbol + val.substring(end);
+    const newPos = start + symbol.length - cursorOffset;
+    textarea.selectionStart = newPos;
+    textarea.selectionEnd = newPos;
+    textarea.focus();
+  }
+
+  toggleSound() {
+    const isEnabled = this.sound.toggle();
+    this.updateSoundButtonUI();
+    if (isEnabled && this.sound) this.sound.playTap();
+  }
+
+  updateSoundButtonUI() {
+    const btn = document.getElementById("btnSoundToggle");
+    if (btn) {
+      btn.innerText = this.sound.enabled ? "🔊" : "🔇";
+      btn.classList.toggle("muted", !this.sound.enabled);
+    }
+  }
+
+  // ==================== ARENA DE DUELOS FANTASMA (GHOST DUELS) ====================
+  openGhostDuelModal() {
+    if (this.sound) this.sound.playTap();
+    const modal = document.getElementById("viewDuelModal");
+    if (!modal) return;
+
+    this.ghostDuel = {
+      active: true,
+      seconds: 0,
+      playerProgress: 0,
+      ghostProgress: 0,
+      ghostSpeed: Math.random() * 5 + 6,
+      timerInterval: null,
+      ghostInterval: null
+    };
+
+    const timerBadge = document.getElementById("duelTimerBadge");
+    const playerBar = document.getElementById("playerProgressBar");
+    const ghostBar = document.getElementById("ghostProgressBar");
+    const playerPct = document.getElementById("playerProgressPct");
+    const ghostPct = document.getElementById("ghostProgressPct");
+    const playerName = document.getElementById("duelPlayerName");
+    const ticker = document.getElementById("ghostStatusTicker");
+    const term = document.getElementById("duelTerminalOutput");
+
+    if (timerBadge) timerBadge.innerText = "⏱️ 00:00";
+    if (playerBar) playerBar.style.width = "0%";
+    if (ghostBar) ghostBar.style.width = "0%";
+    if (playerPct) playerPct.innerText = "0%";
+    if (ghostPct) ghostPct.innerText = "0%";
+    if (playerName) playerName.innerText = this.user.username;
+    if (ticker) ticker.innerText = "👻 ShadowCoder_89 está analizando el enunciado...";
+    if (term) term.style.display = "none";
+
+    this.ghostDuel.timerInterval = setInterval(() => {
+      if (!this.ghostDuel || !this.ghostDuel.active) return;
+      this.ghostDuel.seconds++;
+      const m = String(Math.floor(this.ghostDuel.seconds / 60)).padStart(2, "0");
+      const s = String(this.ghostDuel.seconds % 60).padStart(2, "0");
+      if (timerBadge) timerBadge.innerText = `⏱️ ${m}:${s}`;
+    }, 1000);
+
+    const ghostPhrases = [
+      "👻 ShadowCoder_89 definió la signatura invertir_texto...",
+      "👻 El rival escribió el operador de paso [::-1]...",
+      "👻 ShadowCoder_89 está ejecutando sus aserciones...",
+      "👻 ¡El fantasma casi termina! Apresúrate..."
+    ];
+
+    let phraseIdx = 0;
+    this.ghostDuel.ghostInterval = setInterval(() => {
+      if (!this.ghostDuel || !this.ghostDuel.active) return;
+      this.ghostDuel.ghostProgress = Math.min(100, this.ghostDuel.ghostProgress + this.ghostDuel.ghostSpeed);
+      if (ghostBar) ghostBar.style.width = `${this.ghostDuel.ghostProgress}%`;
+      if (ghostPct) ghostPct.innerText = `${Math.round(this.ghostDuel.ghostProgress)}%`;
+
+      if (phraseIdx < ghostPhrases.length && ticker) {
+        ticker.innerText = ghostPhrases[phraseIdx++];
+      }
+
+      if (this.ghostDuel.ghostProgress >= 100) {
+        clearInterval(this.ghostDuel.ghostInterval);
+        if (ticker) ticker.innerText = "⚠️ ¡El fantasma completó su código! Tienes pocos segundos para superarlo...";
+      }
+    }, 1800);
+
+    modal.style.display = "flex";
+  }
+
+  closeGhostDuelModal() {
+    if (this.sound) this.sound.playTap();
+    if (this.ghostDuel) {
+      this.ghostDuel.active = false;
+      clearInterval(this.ghostDuel.timerInterval);
+      clearInterval(this.ghostDuel.ghostInterval);
+    }
+    const modal = document.getElementById("viewDuelModal");
+    if (modal) modal.style.display = "none";
+  }
+
+  async submitDuelCode() {
+    if (this.sound) this.sound.playTap();
+    const code = document.getElementById("duelCodeEditor").value;
+    const term = document.getElementById("duelTerminalOutput");
+    const playerBar = document.getElementById("playerProgressBar");
+    const playerPct = document.getElementById("playerProgressPct");
+    term.style.display = "block";
+    term.innerHTML = "⏳ Verificando solución en el sandbox de duelos...";
+
+    const duelTest = `
+assert invertir_texto('python') == 'nohtyp', 'Esperado nohtyp'
+assert invertir_texto('reconocer') == 'reconocer'
+assert invertir_texto('') == ''
+print('¡Duelo superado exitosamente!')
+`;
+
+    try {
+      const res = await fetch(this.apiUrl("/api/execute"), {
+        method: "POST",
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify({ block_id: "bloque_1", lesson_id: "duel_reversal", code: code + "\n" + duelTest })
+      });
+      const data = await res.json();
+
+      if (data.passed) {
+        const playerWon = this.ghostDuel && this.ghostDuel.ghostProgress < 100;
+        if (this.ghostDuel) {
+          this.ghostDuel.active = false;
+          clearInterval(this.ghostDuel.timerInterval);
+          clearInterval(this.ghostDuel.ghostInterval);
+        }
+
+        if (playerBar) playerBar.style.width = "100%";
+        if (playerPct) playerPct.innerText = "100%";
+
+        if (playerWon) {
+          if (this.sound) this.sound.playSuccess();
+          if (this.fx) {
+            this.fx.spawn(window.innerWidth / 2, window.innerHeight / 2, 60, ["#f59e0b", "#38bdf8", "#10b981", "#ffffff"]);
+            this.fx.spawnText(window.innerWidth / 2, window.innerHeight / 2 - 40, "¡VICTORIA EN DUELO! +100 XP", "#34d399");
+          }
+          this.addXP(100, "Victoria en Duelo Fantasma");
+          term.innerHTML = `<span style="color: #34d399; font-weight: 800;">🏆 ¡VICTORIA APLASTANTE! DERROTASTE AL FANTASMA (+100 XP)</span><br><br>${data.stdout}`;
+        } else {
+          if (this.sound) this.sound.playSuccess();
+          this.addXP(30, "Completado tras el fantasma");
+          term.innerHTML = `<span style="color: #f59e0b; font-weight: 700;">🥈 ¡Bien jugado! Tu solución es correcta, aunque el fantasma fue más veloz (+30 XP).</span><br><br>${data.stdout}`;
+        }
+      } else {
+        if (this.sound) this.sound.playError();
+        term.innerHTML = `<span style="color: #f87171;">❌ PRUEBAS DEL DUELO FALLIDAS:</span><br><pre style="color: #cbd5e1; margin-top: 4px;">${data.stderr || data.stdout || 'Verifica la aserción.'}</pre>`;
+      }
+    } catch (e) {
+      if (this.sound) this.sound.playError();
+      term.innerHTML = `<span style="color: #f87171;">Nota: Conecta el backend en Render para validar duelos con ejecución de código.</span>`;
+    }
   }
 
   escapeHtml(str) {
@@ -1347,6 +1899,7 @@ class AppController {
 
   // ==================== NAVEGACIÓN ====================
   switchTab(tabKey) {
+    if (this.sound) this.sound.playTap();
     const tabs = {
       camino: "tabCamino",
       sql: "tabSql",
@@ -1355,9 +1908,22 @@ class AppController {
       logros: "tabLogros"
     };
 
-    document.querySelectorAll(".view-tab").forEach(tab => tab.classList.remove("active"));
     const targetTab = document.getElementById(tabs[tabKey]);
-    if (targetTab) targetTab.classList.add("active");
+    if (!targetTab) return;
+
+    // Transición suave por hardware para iOS 15 / Desktop
+    const main = document.getElementById("mainApp");
+    if (main) {
+      main.style.opacity = "0.7";
+      main.style.transform = "scale(0.99)";
+      setTimeout(() => {
+        main.style.opacity = "1";
+        main.style.transform = "scale(1)";
+      }, 90);
+    }
+
+    document.querySelectorAll(".view-tab").forEach(tab => tab.classList.remove("active"));
+    targetTab.classList.add("active");
 
     document.querySelectorAll(".mobile-nav .nav-item").forEach(item => item.classList.remove("active"));
     const navButtons = document.querySelectorAll(".mobile-nav .nav-item");

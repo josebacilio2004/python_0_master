@@ -317,16 +317,33 @@ def execute_sql(payload: SQLExecuteRequest):
     else:
         explanation = explain_sql_query(raw_query)
 
-    # Protección de seguridad básica en sandbox
-    forbidden = ["DROP ", "ALTER ", "TRUNCATE ", "--", ";--"]
-    for word in forbidden:
-        if word in interpreted_query.upper() and not raw_query.upper().startswith("SELECT"):
-            raise HTTPException(status_code=403, detail=f"Instrucción restringida en el entorno interactivo: {word.strip()}")
+    # Protección de seguridad reforzada en Sandbox SQL
+    INTERNAL_PROTECTED_TABLES = [
+        "user_accounts", "user_profiles", "user_progress", 
+        "code_submissions", "sql_submissions", "achievements",
+        "pg_catalog", "information_schema"
+    ]
+    for tbl in INTERNAL_PROTECTED_TABLES:
+        if re.search(r'\b' + re.escape(tbl) + r'\b', interpreted_query, re.IGNORECASE):
+            raise HTTPException(
+                status_code=403,
+                detail=f"🛡️ [SANDBOX SHIELD] Acceso denegado: La entidad '{tbl}' es un recurso interno del sistema protegido contra consultas de alumnos."
+            )
+
+    forbidden_keywords = ["DROP ", "ALTER ", "TRUNCATE ", "GRANT ", "REVOKE ", "PG_SLEEP", "PG_READ_FILE", "DBLINK", "LO_IMPORT", ";--", "--"]
+    for word in forbidden_keywords:
+        if word in interpreted_query.upper():
+            raise HTTPException(status_code=403, detail=f"🛡️ [SANDBOX SHIELD] Instrucción restringida en el entorno interactivo: {word.strip()}")
 
     # Ejecutar consulta
     start_time = time.time()
     try:
         with engine.connect() as conn:
+            if not IS_SQLITE:
+                try:
+                    conn.execute(text("SET TRANSACTION READ ONLY;"))
+                except Exception:
+                    pass
             cursor = conn.execute(text(interpreted_query))
             duration_ms = round((time.time() - start_time) * 1000, 2)
 

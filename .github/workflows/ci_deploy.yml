@@ -1,0 +1,49 @@
+name: Python & SQL Master - CI & Docs Sync
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install ruff
+
+      - name: Syntax & AST Validation (Backend & Lessons)
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'backend')
+          from curriculum_data import CURRICULUM
+          import ast
+          for block in CURRICULUM:
+              for lesson in block['lessons']:
+                  ast.parse(lesson['exercise']['starter_code'])
+                  ast.parse(lesson['exercise']['test_code'])
+          print('✅ Las 19 lecciones tienen AST y tests sintácticamente válidos.')
+          "
+
+      - name: Auto-Sync /docs Assets
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cp -r web_app/static/* docs/
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/
+          git diff --staged --quiet || git commit -m "chore(ci): auto-sync static assets to /docs [skip ci]"
+          git push

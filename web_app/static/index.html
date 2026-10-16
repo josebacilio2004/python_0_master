@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Canvas para Sistema de Partículas XP (Zero-DOM) -->
+  <canvas id="fxCanvas" class="fx-canvas"></canvas>
+
   <!-- Header con Barra de Nivel, XP y Racha -->
   <header class="app-header">
     <div class="header-content">
@@ -35,6 +38,12 @@
           <span class="stat-icon">🔥</span>
           <span class="stat-value" id="userStreakBadge">3</span>
         </div>
+        <button class="btn-duel-header" onclick="app.openGhostDuelModal()" title="Duelo Fantasma de Velocidad 1 vs 1">
+          ⚔️ <span class="hide-mobile">Duelo</span>
+        </button>
+        <button class="btn-sound-toggle" id="btnSoundToggle" onclick="app.toggleSound()" title="Activar/Desactivar Efectos de Audio Sintético">
+          🔊
+        </button>
         <button class="btn-db-seed" onclick="app.seedDatabase()" title="Sembrar / Restaurar datos en Supabase/SQLite">
           🌱 <span class="hide-mobile">BD Seeder</span>
         </button>
@@ -379,6 +388,69 @@
         <div style="display: flex; gap: 8px; margin-top: 14px;">
           <button class="btn-secondary" style="flex: 1;" onclick="app.setLocalApi()">Usar Localhost</button>
           <button class="btn-primary" style="flex: 1;" onclick="app.testAndSaveApiUrl()">Probar & Guardar ⚡</button>
+        </div>
+    <!-- ==================== VISTA MODAL: DUELO FANTASMA (GHOST DUEL 1 vs 1) ==================== -->
+    <section id="viewDuelModal" class="lesson-modal" style="display: none;">
+      <div class="lesson-modal-content" style="max-width: 600px;">
+        <button class="btn-close-modal" onclick="app.closeGhostDuelModal()">✕ Salir del Duelo</button>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <span style="font-size: 0.72rem; color: #ef4444; font-weight: 800; letter-spacing: 1px;">⚡ ARENA DE DUELOS ASÍNCRONOS</span>
+          <span id="duelTimerBadge" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-gold); font-weight: 700;">⏱️ 00:00</span>
+        </div>
+        <h3 id="duelTitle" style="font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">Duelo Relámpago: Inversor de Cadenas</h3>
+        <p id="duelDescription" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5;">
+          Escribe la función <code>invertir_texto(s: str) -> str</code> que reciba una cadena y retorne el texto invertido usando slicing de CPython. ¡El oponente fantasma ya comenzó a codificar!
+        </p>
+
+        <!-- Marcador 1 vs 1 con Barras de Progreso -->
+        <div class="duel-scoreboard">
+          <div class="duel-player-card">
+            <div class="duel-player-header">
+              <span class="player-name">👤 Tú (<span id="duelPlayerName">Jugador</span>)</span>
+              <span class="player-pct" id="playerProgressPct">0%</span>
+            </div>
+            <div class="duel-progress-track">
+              <div class="duel-progress-fill player-fill" id="playerProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="duel-vs-badge">VS</div>
+
+          <div class="duel-player-card">
+            <div class="duel-player-header">
+              <span class="player-name opponent-name">👻 <span id="ghostOpponentName">ShadowCoder_89</span> (Rango 1)</span>
+              <span class="player-pct" id="ghostProgressPct">0%</span>
+            </div>
+            <div class="duel-progress-track">
+              <div class="duel-progress-fill ghost-fill" id="ghostProgressBar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="ghostStatusTicker" class="ghost-ticker">
+          👻 El oponente fantasma está analizando el enunciado y escribiendo el arnés...
+        </div>
+
+        <!-- Barra de símbolos Python para móvil y desktop -->
+        <div style="margin-top: 14px;">
+          <div class="code-accessory-bar" id="duelAccessoryBar">
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('    ', 0, 'duelCodeEditor')">Tab</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(':', 0, 'duelCodeEditor')">:</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('()', 1, 'duelCodeEditor')">( )</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('\'\'', 1, 'duelCodeEditor')">' '</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('[]', 1, 'duelCodeEditor')">[ ]</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(' == ', 0, 'duelCodeEditor')">==</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('def ', 0, 'duelCodeEditor')">def</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol('return ', 0, 'duelCodeEditor')">return</button>
+            <button type="button" class="acc-btn" onclick="app.insertSymbol(' -> ', 0, 'duelCodeEditor')">-&gt;</button>
+          </div>
+          <textarea id="duelCodeEditor" class="code-editor-area" style="min-height: 120px;">def invertir_texto(s: str) -> str:
+    # Tu código veloz aquí
+    pass</textarea>
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button class="btn-primary" style="flex: 1;" onclick="app.submitDuelCode()">⚡ Enviar Solución del Duelo</button>
+          </div>
+          <div id="duelTerminalOutput" style="display: none; background: #03060a; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; margin-top: 10px; font-family: var(--font-mono); font-size: 0.8rem;"></div>
         </div>
       </div>
     </section>

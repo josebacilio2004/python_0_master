@@ -1197,25 +1197,254 @@ body {
   color: #f8fafc;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
-  cursor: pointer;
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  transition: all 0.15s ease;
+  position: relative;
 }
 
-.puzzle-piece-assembled:hover {
-  background: rgba(239, 68, 68, 0.15);
+.puzzle-piece-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.indent-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.btn-indent {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-indent:hover {
+  background: rgba(56, 189, 248, 0.3);
+}
+
+.indent-level-badge {
+  font-size: 0.68rem;
+  color: var(--accent-gold);
+  font-weight: 700;
+  min-width: 32px;
+  text-align: center;
+}
+
+.btn-remove-piece {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  font-size: 0.72rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-remove-piece:hover {
+  background: rgba(239, 68, 68, 0.35);
+}
+
+/* ==================== ZERO-DOM CANVAS PARTICLE ENGINE ==================== */
+.fx-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* Botón de Sonido Sintético en Header */
+.btn-sound-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-sound-toggle:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--primary);
+}
+
+.btn-sound-toggle.muted {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* Botón de Duelo en Header */
+.btn-duel-header {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2));
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+.btn-duel-header:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(245, 158, 11, 0.35));
   border-color: #ef4444;
+  transform: translateY(-1px);
 }
 
-.piece-tag-remove {
-  font-size: 0.7rem;
-  color: #94a3b8;
+/* ==================== BARRA ERGONÓMICA DE SÍMBOLOS PYTHON ==================== */
+.code-accessory-bar {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 6px 4px;
+  background: #080d16;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  -webkit-overflow-scrolling: touch;
 }
 
-.puzzle-piece-assembled:hover .piece-tag-remove {
-  color: #ef4444;
+.acc-btn {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #93c5fd;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.acc-btn:active,
+.acc-btn:hover {
+  background: var(--primary);
+  color: #030712;
+}
+
+/* ==================== GHOST DUEL ARENA (DUELO 1 vs 1) ==================== */
+.duel-scoreboard {
+  background: #06090e;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.duel-player-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.duel-player-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.player-name {
+  color: #38bdf8;
+}
+
+.opponent-name {
+  color: #f87171;
+}
+
+.player-pct {
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+}
+
+.duel-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.duel-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.player-fill {
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+}
+
+.ghost-fill {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+}
+
+.duel-vs-badge {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: var(--accent-gold);
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.duel-vs-badge::before,
+.duel-vs-badge::after {
+  content: "";
+  display: inline-block;
+  width: 30%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  vertical-align: middle;
+  margin: 0 8px;
+}
+
+.ghost-ticker {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px dashed rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.76rem;
+  color: #fca5a5;
+  font-family: var(--font-mono);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
 }

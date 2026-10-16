@@ -28,27 +28,39 @@ SQLITE_FALLBACK_URL = "sqlite:///./python_master_game.db"
 
 Base = declarative_base()
 
+from sqlalchemy.pool import NullPool
+
 def init_engine():
     global RAW_DB_URL
     is_sqlite = False
 
     try:
-        connect_args = {"connect_timeout": 3}
         if "sqlite" in RAW_DB_URL:
             connect_args = {"check_same_thread": False}
             is_sqlite = True
-            
-        temp_engine = create_engine(
-            RAW_DB_URL,
-            pool_pre_ping=True,
-            connect_args=connect_args
-        )
+            temp_engine = create_engine(
+                RAW_DB_URL,
+                connect_args=connect_args
+            )
+        else:
+            # Optimizado para PgBouncer (:6543 Transaction Mode) en Supabase:
+            # NullPool evita errores de Prepared Statements y fugas de sockets en Render
+            connect_args = {
+                "connect_timeout": 5,
+                "options": "-c statement_timeout=3000 -c lock_timeout=1500"
+            }
+            temp_engine = create_engine(
+                RAW_DB_URL,
+                poolclass=NullPool,
+                connect_args=connect_args
+            )
+
         with temp_engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         print(f"[DB] Conectado exitosamente a: {RAW_DB_URL.split('@')[-1] if '@' in RAW_DB_URL else 'SQLite/Local'}")
         return temp_engine, is_sqlite
     except Exception as e:
-        print(f"[DB] Advertencia: BD principal no disponible. Usando fallback SQLite local...")
+        print(f"[DB] Advertencia: BD principal no disponible ({str(e)[:60]}...). Usando fallback SQLite local...")
         fallback_engine = create_engine(
             SQLITE_FALLBACK_URL,
             connect_args={"check_same_thread": False}

@@ -85,9 +85,21 @@ def get_js():
 def get_fallback():
     return FileResponse(os.path.join(STATIC_DIR, "curriculum_fallback.js"))
 
+@app.get("/health/ping")
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "app": "Python Master Game & SQL Academy", "version": "2.0.0"}
+    return {"status": "ok", "app": "Python Master Game & SQL Academy", "version": "2.4.0"}
+
+@app.get("/health/deep")
+def deep_health_check():
+    from database import engine, IS_SQLITE
+    from sqlalchemy import text
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {"status": "healthy", "database": "connected", "is_sqlite": IS_SQLITE}
+    except Exception as e:
+        return {"status": "degraded", "database": "disconnected", "error": str(e), "is_sqlite": IS_SQLITE}
 
 if __name__ == "__main__":
     import uvicorn
