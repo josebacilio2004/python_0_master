@@ -81,6 +81,10 @@ def get_css():
 def get_js():
     return FileResponse(os.path.join(STATIC_DIR, "app.js"))
 
+@app.get("/curriculum_fallback.js")
+def get_fallback():
+    return FileResponse(os.path.join(STATIC_DIR, "curriculum_fallback.js"))
+
 @app.get("/health")
 def health_check():
     return {"status": "ok", "app": "Python Master Game & SQL Academy", "version": "2.0.0"}
