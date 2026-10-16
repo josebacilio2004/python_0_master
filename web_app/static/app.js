@@ -5,17 +5,15 @@
 
 class AppController {
   constructor() {
-    // Detección de URL base de la API (para soporte de GitHub Pages y Local)
+    // Detección de URL base de la API
     const isGitHubPages = window.location.hostname.includes("github.io");
     const savedApi = localStorage.getItem("PYTHON_MASTER_API_URL");
     
-    // Si está en GitHub Pages, usa la URL configurada o la de Render
+    // Si el usuario configuró una URL la usa; si está en GitHub Pages y no hay configurada, intenta localhost o Render
     if (savedApi) {
       this.apiBaseUrl = savedApi.replace(/\/$/, "");
-    } else if (isGitHubPages) {
-      this.apiBaseUrl = "https://python-master-game.onrender.com";
     } else {
-      this.apiBaseUrl = ""; // Mismo origen (local o Render directo)
+      this.apiBaseUrl = ""; // Mismo origen por defecto
     }
 
     this.token = localStorage.getItem("PYTHON_MASTER_TOKEN") || null;
@@ -25,12 +23,12 @@ class AppController {
       id: this.currentUser ? this.currentUser.username : "default_user",
       username: this.currentUser ? this.currentUser.username : "Invitado",
       fullName: this.currentUser ? this.currentUser.full_name : "Python Master",
-      xp: 150,
-      level: 1,
-      rankTitle: "Recluta del Byte",
+      xp: this.currentUser ? (this.currentUser.xp || 150) : 150,
+      level: this.currentUser ? (this.currentUser.level || 1) : 1,
+      rankTitle: this.currentUser ? (this.currentUser.rank_title || "Recluta del Byte") : "Recluta del Byte",
       nextLevelXp: 200,
       streak: 3,
-      completedLessons: [],
+      completedLessons: JSON.parse(localStorage.getItem("PYTHON_MASTER_COMPLETED") || "[]"),
       achievements: []
     };
 
@@ -40,15 +38,23 @@ class AppController {
     this.selectedMissionId = null;
     this.currentBlockId = null;
     this.currentLessonId = null;
+    this.isBackendOnline = false;
 
     this.atmCurrentBalance = 1000.00;
   }
 
   async init() {
     this.updateAuthButtonUI();
-    await this.loadUserProfile();
+    this.updateHeaderStats();
+    
+    // Intentar verificar conectividad con el backend
+    await this.checkBackendHealth();
+
+    // Cargar módulos (con fallback inmediato para que NUNCA aparezca en blanco)
     await this.loadModules();
+    await this.loadUserProfile();
     await this.loadSqlChallenges();
+    
     this.renderRoadmap();
     this.renderBriefClasses();
   }
@@ -56,6 +62,7 @@ class AppController {
   apiUrl(endpoint) {
     if (endpoint.startsWith("http")) return endpoint;
     const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    if (!this.apiBaseUrl) return cleanEndpoint;
     return `${this.apiBaseUrl}${cleanEndpoint}`;
   }
 
@@ -65,6 +72,33 @@ class AppController {
       headers["Authorization"] = `Bearer ${this.token}`;
     }
     return headers;
+  }
+
+  async checkBackendHealth() {
+    const dot = document.getElementById("apiStatusDot");
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      
+      const res = await fetch(this.apiUrl("/health"), { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (res.ok) {
+        this.isBackendOnline = true;
+        if (dot) {
+          dot.classList.add("online");
+          dot.title = "Backend Conectado & Operativo";
+        }
+        return true;
+      }
+    } catch (e) {
+      this.isBackendOnline = false;
+      if (dot) {
+        dot.classList.remove("online");
+        dot.title = "Modo Local / Backend Desconectado (Pulsa ⚙️ para conectar Render)";
+      }
+    }
+    return false;
   }
 
   // ==================== AUTENTICACIÓN & SESIONES ====================
@@ -102,6 +136,7 @@ class AppController {
     statusMsg.style.color = "var(--primary)";
     statusMsg.textContent = "Verificando credenciales...";
 
+    // 1. Intentar iniciar sesión en el backend si está disponible
     try {
       const res = await fetch(this.apiUrl("/api/auth/login"), {
         method: "POST",
@@ -111,30 +146,30 @@ class AppController {
       const data = await res.json();
 
       if (res.ok && data.token) {
-        this.token = data.token;
-        this.currentUser = data.user;
-        localStorage.setItem("PYTHON_MASTER_TOKEN", data.token);
-        localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(data.user));
-
-        this.user.id = data.user.username;
-        this.user.username = data.user.username;
-        this.user.fullName = data.user.full_name;
-        this.user.xp = data.user.xp;
-        this.user.level = data.user.level;
-        this.user.rankTitle = data.user.rank_title;
-
-        this.updateAuthButtonUI();
-        this.closeAuthModal();
-        await this.loadUserProfile();
+        this.setAuthenticatedUser(data.token, data.user);
         alert(`🎉 ¡Bienvenido de nuevo, ${this.user.fullName || this.user.username}!`);
-      } else {
+        return;
+      } else if (res.status === 401 || res.status === 400) {
         statusMsg.style.color = "#f87171";
         statusMsg.textContent = data.detail || "Credenciales incorrectas.";
+        return;
       }
     } catch (e) {
-      statusMsg.style.color = "#f87171";
-      statusMsg.textContent = "Error de conexión con el servidor.";
+      console.warn("Backend no respondió, activando fallback local:", e);
     }
+
+    // 2. Fallback Modo Local (Offline o sin backend configurado)
+    const localUser = {
+      id: ident,
+      username: ident,
+      email: `${ident}@local.app`,
+      full_name: ident.charAt(0).toUpperCase() + ident.slice(1),
+      xp: this.user.xp || 150,
+      level: this.user.level || 1,
+      rank_title: this.user.rankTitle || "Recluta del Byte"
+    };
+    this.setAuthenticatedUser("local_token_" + Date.now(), localUser);
+    alert(`🎉 ¡Bienvenido, ${localUser.full_name}! Has ingresado en Modo Local.`);
   }
 
   async submitRegister() {
@@ -146,8 +181,9 @@ class AppController {
 
     statusMsg.style.display = "block";
     statusMsg.style.color = "var(--primary)";
-    statusMsg.textContent = "Registrando cuenta en Supabase...";
+    statusMsg.textContent = "Creando cuenta de usuario...";
 
+    // 1. Intentar registrar en el backend si está configurado
     try {
       const res = await fetch(this.apiUrl("/api/auth/register"), {
         method: "POST",
@@ -157,30 +193,49 @@ class AppController {
       const data = await res.json();
 
       if (res.ok && data.token) {
-        this.token = data.token;
-        this.currentUser = data.user;
-        localStorage.setItem("PYTHON_MASTER_TOKEN", data.token);
-        localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(data.user));
-
-        this.user.id = data.user.username;
-        this.user.username = data.user.username;
-        this.user.fullName = data.user.full_name;
-        this.user.xp = data.user.xp;
-        this.user.level = data.user.level;
-        this.user.rankTitle = data.user.rank_title;
-
-        this.updateAuthButtonUI();
-        this.closeAuthModal();
-        await this.loadUserProfile();
-        alert(`🚀 ¡Registro exitoso! Has obtenido tu Pase de Desarrollador con +150 XP de bienvenida.`);
-      } else {
+        this.setAuthenticatedUser(data.token, data.user);
+        alert(`🚀 ¡Registro exitoso en Supabase! Tienes +150 XP de bienvenida.`);
+        return;
+      } else if (res.status === 400) {
         statusMsg.style.color = "#f87171";
         statusMsg.textContent = data.detail || "Error en el registro.";
+        return;
       }
     } catch (e) {
-      statusMsg.style.color = "#f87171";
-      statusMsg.textContent = "Error de conexión con el servidor.";
+      console.warn("Backend no disponible para registro, activando modo local:", e);
     }
+
+    // 2. Fallback de Registro Local Inteligente (Garantiza que el usuario NUNCA quede bloqueado)
+    const localUser = {
+      id: username,
+      username: username,
+      email: email,
+      full_name: fullName || username,
+      xp: 150,
+      level: 1,
+      rank_title: "Recluta del Byte"
+    };
+
+    this.setAuthenticatedUser("local_token_" + Date.now(), localUser);
+    alert(`🎉 ¡Bienvenido al Reino, ${localUser.full_name}!\n\nTu cuenta se ha activado en Modo Local con +150 XP.\n\nPara sincronizar con Supabase en la nube, pulsa el botón ⚙️ en el encabezado e ingresa tu enlace de Render.`);
+  }
+
+  setAuthenticatedUser(token, userData) {
+    this.token = token;
+    this.currentUser = userData;
+    localStorage.setItem("PYTHON_MASTER_TOKEN", token);
+    localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(userData));
+
+    this.user.id = userData.username;
+    this.user.username = userData.username;
+    this.user.fullName = userData.full_name;
+    this.user.xp = userData.xp || 150;
+    this.user.level = userData.level || 1;
+    this.user.rankTitle = userData.rank_title || "Recluta del Byte";
+
+    this.updateAuthButtonUI();
+    this.closeAuthModal();
+    this.updateHeaderStats();
   }
 
   logout() {
@@ -190,8 +245,9 @@ class AppController {
     localStorage.removeItem("PYTHON_MASTER_USER");
     this.user.id = "default_user";
     this.user.username = "Invitado";
+    this.user.fullName = "Python Master";
     this.updateAuthButtonUI();
-    this.loadUserProfile();
+    this.updateHeaderStats();
     alert("Has cerrado sesión. Jugando en modo invitado.");
   }
 
@@ -212,6 +268,8 @@ class AppController {
   // ==================== CONFIGURACIÓN DE API (GITHUB PAGES) ====================
   openApiModal() {
     document.getElementById("inputApiBaseUrl").value = this.apiBaseUrl;
+    const fb = document.getElementById("apiTestFeedback");
+    fb.style.display = "none";
     document.getElementById("viewApiModal").style.display = "flex";
   }
 
@@ -219,18 +277,64 @@ class AppController {
     document.getElementById("viewApiModal").style.display = "none";
   }
 
-  saveApiBaseUrl() {
-    const val = document.getElementById("inputApiBaseUrl").value.trim().replace(/\/$/, "");
-    this.apiBaseUrl = val;
-    localStorage.setItem("PYTHON_MASTER_API_URL", val);
-    this.closeApiModal();
-    alert(`URL del backend configurada: ${val || 'Mismo Origen (Local)'}\nRecargando datos...`);
-    this.init();
+  async testAndSaveApiUrl() {
+    const input = document.getElementById("inputApiBaseUrl");
+    const rawVal = input.value.trim().replace(/\/$/, "");
+    const fb = document.getElementById("apiTestFeedback");
+    
+    fb.style.display = "block";
+    fb.style.color = "var(--primary)";
+    fb.textContent = "Probando conexión con el servicio web...";
+
+    if (!rawVal) {
+      this.setLocalApi();
+      return;
+    }
+
+    try {
+      const res = await fetch(`${rawVal}/health`, { method: "GET" });
+      if (res.ok) {
+        const data = await res.json();
+        this.apiBaseUrl = rawVal;
+        localStorage.setItem("PYTHON_MASTER_API_URL", rawVal);
+        this.isBackendOnline = true;
+        
+        fb.style.color = "#34d399";
+        fb.innerHTML = `✅ ¡Conexión exitosa con Render! Servicio: <strong>${data.app || 'Python Master'}</strong>`;
+        
+        setTimeout(() => {
+          this.closeApiModal();
+          this.init();
+        }, 1200);
+        return;
+      }
+    } catch (e) {
+      console.warn("Prueba fallida de URL:", e);
+    }
+
+    // Si falló pero el usuario quiere guardarla (por si Render está en cold start)
+    if (confirm("El servidor no respondió de inmediato (los servicios gratuitos en Render tardan ~40 seg en arrancar si estaban inactivos).\n\n¿Deseas guardar esta URL de todos modos?")) {
+      this.apiBaseUrl = rawVal;
+      localStorage.setItem("PYTHON_MASTER_API_URL", rawVal);
+      this.closeApiModal();
+      this.init();
+    } else {
+      fb.style.color = "#f87171";
+      fb.textContent = "No se pudo conectar a la URL. Verifica que sea correcta y que el servicio en Render haya terminado de compilar.";
+    }
   }
 
   setLocalApi() {
-    document.getElementById("inputApiBaseUrl").value = "";
-    this.saveApiBaseUrl();
+    this.apiBaseUrl = "";
+    localStorage.removeItem("PYTHON_MASTER_API_URL");
+    const fb = document.getElementById("apiTestFeedback");
+    fb.style.display = "block";
+    fb.style.color = "var(--accent-gold)";
+    fb.textContent = "Configurado en Modo Local (Mismo Origen).";
+    setTimeout(() => {
+      this.closeApiModal();
+      this.init();
+    }, 800);
   }
 
   // ==================== PERFIL & GAMIFICACIÓN ====================
@@ -241,19 +345,20 @@ class AppController {
       });
       if (res.ok) {
         const data = await res.json();
-        this.user.xp = data.xp || 150;
-        this.user.level = data.level || 1;
-        this.user.rankTitle = data.rank_title || "Recluta del Byte";
+        this.user.xp = data.xp || this.user.xp;
+        this.user.level = data.level || this.user.level;
+        this.user.rankTitle = data.rank_title || this.user.rankTitle;
         this.user.nextLevelXp = data.next_level_xp || 200;
         this.user.streak = data.streak_days || 3;
-        this.user.completedLessons = data.completed_lessons || [];
+        this.user.completedLessons = data.completed_lessons || this.user.completedLessons;
         this.user.achievements = data.achievements || [];
         this.updateHeaderStats();
+        return;
       }
     } catch (e) {
-      console.warn("Usando perfil local offline:", e);
-      this.updateHeaderStats();
+      console.warn("Perfil cargado desde almacenamiento local.");
     }
+    this.updateHeaderStats();
   }
 
   updateHeaderStats() {
@@ -268,75 +373,98 @@ class AppController {
     const unlockedAch = this.user.achievements.filter(a => a.unlocked).length;
     document.getElementById("statAchievementsCount").textContent = unlockedAch;
 
-    // Calcular progreso al siguiente nivel
     const pct = Math.min(100, Math.round((this.user.xp / this.user.nextLevelXp) * 100));
     document.getElementById("levelProgressFill").style.width = `${pct}%`;
   }
 
   async addXP(amount, reason = "Reto superado") {
+    this.user.xp += amount;
+    
+    // Cálculo de nivel local
+    if (this.user.xp >= 3200) {
+      this.user.level = 6;
+      this.user.rankTitle = "Staff Engineer & Arquitecto";
+    } else if (this.user.xp >= 2000) {
+      this.user.level = 5;
+      this.user.rankTitle = "Titán de SQL & Datos";
+    } else if (this.user.xp >= 1200) {
+      this.user.level = 4;
+      this.user.rankTitle = "Mago de la POO";
+    } else if (this.user.xp >= 600) {
+      this.user.level = 3;
+      this.user.rankTitle = "Maestro de Estructuras";
+    } else if (this.user.xp >= 200) {
+      this.user.level = 2;
+      this.user.rankTitle = "Explorador de Bucles";
+    }
+
+    if (this.currentUser) {
+      this.currentUser.xp = this.user.xp;
+      this.currentUser.level = this.user.level;
+      this.currentUser.rank_title = this.user.rankTitle;
+      localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(this.currentUser));
+    }
+
+    this.updateHeaderStats();
+
+    // Intentar sincronizar con el servidor
     try {
-      const res = await fetch(this.apiUrl("/api/progress/add_xp"), {
+      await fetch(this.apiUrl("/api/progress/add_xp"), {
         method: "POST",
         headers: this.getAuthHeaders(),
         body: JSON.stringify({ user_id: this.user.id, xp_amount: amount, reason: reason })
       });
-      if (res.ok) {
-        const data = await res.json();
-        this.user.xp = data.xp;
-        this.user.level = data.level;
-        this.user.rankTitle = data.rank_title;
-        this.user.nextLevelXp = data.next_level_xp;
-        this.updateHeaderStats();
-        
-        if (data.leveled_up) {
-          alert(`🎉 ¡SUBISTE DE NIVEL! Ahora eres Nivel ${data.level}: ${data.rank_title}!`);
-        }
-      }
     } catch (e) {
-      this.user.xp += amount;
-      this.updateHeaderStats();
+      // Guardado localmente sin problemas
     }
   }
 
-  // ==================== NAVEGACIÓN ====================
-  switchTab(tabKey) {
-    const tabs = {
-      camino: "tabCamino",
-      sql: "tabSql",
-      apps: "tabApps",
-      clases: "tabClases",
-      logros: "tabLogros"
-    };
-
-    document.querySelectorAll(".view-tab").forEach(tab => tab.classList.remove("active"));
-    const targetTab = document.getElementById(tabs[tabKey]);
-    if (targetTab) targetTab.classList.add("active");
-
-    document.querySelectorAll(".mobile-nav .nav-item").forEach(item => item.classList.remove("active"));
-    const navButtons = document.querySelectorAll(".mobile-nav .nav-item");
-    const tabIndex = Object.keys(tabs).indexOf(tabKey);
-    if (navButtons[tabIndex]) navButtons[tabIndex].classList.add("active");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (tabKey === "logros") this.renderAchievements();
-  }
-
-  // ==================== ROADMAP & LECCIONES ====================
+  // ==================== ROADMAP & LECCIONES (NUNCA EN BLANCO) ====================
   async loadModules() {
+    let loadedFromApi = false;
     try {
       const res = await fetch(this.apiUrl("/api/modules"));
       if (res.ok) {
         const data = await res.json();
-        this.modules = data.modules || [];
+        if (data.modules && data.modules.length > 0) {
+          this.modules = data.modules;
+          loadedFromApi = true;
+        }
       }
     } catch (e) {
-      console.error("Error al cargar módulos:", e);
+      console.warn("No se pudo obtener módulos desde API. Usando base local incorporada...");
+    }
+
+    // Respaldo inmediato si el API no responde o está en blanco
+    if (!loadedFromApi && window.CURRICULUM_FALLBACK) {
+      this.modules = window.CURRICULUM_FALLBACK.map(block => ({
+        id: block.id,
+        title: block.title,
+        days: block.days,
+        icon: block.icon,
+        description: block.description,
+        lessons_count: block.lessons.length
+      }));
     }
   }
 
   renderRoadmap() {
     const container = document.getElementById("gameRoadmap");
     if (!container) return;
+
+    if (!this.modules || this.modules.length === 0) {
+      // Si por alguna razón está vacío, usar el fallback directamente
+      if (window.CURRICULUM_FALLBACK) {
+        this.modules = window.CURRICULUM_FALLBACK.map(block => ({
+          id: block.id,
+          title: block.title,
+          days: block.days,
+          icon: block.icon,
+          description: block.description,
+          lessons_count: block.lessons.length
+        }));
+      }
+    }
 
     container.innerHTML = "";
     this.modules.forEach((mod) => {
@@ -366,42 +494,61 @@ class AppController {
   }
 
   async loadBlockNodes(blockId) {
+    const container = document.getElementById(`nodes_block_${blockId}`);
+    if (!container) return;
+
+    let lessons = [];
+
+    // Intentar desde API
     try {
       const res = await fetch(this.apiUrl(`/api/modules/${blockId}`));
-      if (!res.ok) return;
-      const data = await res.json();
-      const lessons = data.block.lessons || [];
-
-      const container = document.getElementById(`nodes_block_${blockId}`);
-      if (!container) return;
-
-      container.innerHTML = "";
-      lessons.forEach((les) => {
-        const isCompleted = this.user.completedLessons.includes(les.id);
-        const node = document.createElement("div");
-        node.className = `quest-node ${isCompleted ? 'completed' : ''}`;
-        node.innerHTML = `
-          <span class="node-status-icon">${isCompleted ? '⭐' : '🔓'}</span>
-          <span>${les.title.split(' ')[0]} ${les.title.split(' ').slice(1, 3).join(' ')}</span>
-        `;
-        node.onclick = () => this.openLessonModal(blockId, les.id);
-        container.appendChild(node);
-      });
+      if (res.ok) {
+        const data = await res.json();
+        lessons = data.block.lessons || [];
+      }
     } catch (e) {
-      console.warn("Error cargando nodos de bloque:", blockId, e);
+      // Ignorar error de red
     }
+
+    // Fallback local garantizado
+    if (lessons.length === 0 && window.CURRICULUM_FALLBACK) {
+      const blockData = window.CURRICULUM_FALLBACK.find(b => b.id === blockId);
+      if (blockData) lessons = blockData.lessons;
+    }
+
+    container.innerHTML = "";
+    lessons.forEach((les) => {
+      const isCompleted = this.user.completedLessons.includes(les.id);
+      const node = document.createElement("div");
+      node.className = `quest-node ${isCompleted ? 'completed' : ''}`;
+      node.innerHTML = `
+        <span class="node-status-icon">${isCompleted ? '⭐' : '🔓'}</span>
+        <span>${les.title.split(' ')[0]} ${les.title.split(' ').slice(1, 3).join(' ')}</span>
+      `;
+      node.onclick = () => this.openLessonModal(blockId, les.id);
+      container.appendChild(node);
+    });
   }
 
   async openBlockQuests(blockId) {
+    let firstLesson = null;
     try {
       const res = await fetch(this.apiUrl(`/api/modules/${blockId}`));
-      const data = await res.json();
-      const firstLesson = data.block.lessons[0];
-      if (firstLesson) {
-        this.openLessonModal(blockId, firstLesson.id);
+      if (res.ok) {
+        const data = await res.json();
+        firstLesson = data.block.lessons[0];
       }
     } catch (e) {
-      console.error(e);
+      // Fallback
+    }
+
+    if (!firstLesson && window.CURRICULUM_FALLBACK) {
+      const blk = window.CURRICULUM_FALLBACK.find(b => b.id === blockId);
+      if (blk && blk.lessons.length > 0) firstLesson = blk.lessons[0];
+    }
+
+    if (firstLesson) {
+      this.openLessonModal(blockId, firstLesson.id);
     }
   }
 
@@ -409,85 +556,99 @@ class AppController {
     this.currentBlockId = blockId;
     this.currentLessonId = lessonId;
 
+    let lesson = null;
+
     try {
       const res = await fetch(this.apiUrl(`/api/modules/${blockId}/lesson/${lessonId}`));
-      const data = await res.json();
-      const lesson = data.lesson;
-
-      const modal = document.getElementById("viewLessonModal");
-      const content = document.getElementById("lessonModalDetail");
-
-      content.innerHTML = `
-        <div style="margin-bottom: 14px;">
-          <span style="font-size: 0.75rem; color: var(--accent-gold); font-weight: 700;">ESTACIÓN DE APRENDIZAJE</span>
-          <h2 style="font-size: 1.25rem; font-weight: 800; margin-top: 4px;">${lesson.title}</h2>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; font-size: 0.88rem; line-height: 1.6; border: 1px solid var(--border-color); margin-bottom: 16px;">
-          ${this.formatMarkdown(lesson.theory)}
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 8px;">⚖️ Antipatrón vs Código Pythonico:</h4>
-          <div style="background: #080c14; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; padding: 10px; margin-bottom: 8px;">
-            <span style="font-size: 0.72rem; color: #f87171; font-weight: 700;">❌ ANTIPATRÓN LENTO:</span>
-            <pre style="font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; margin-top: 4px; overflow-x: auto;"><code>${lesson.code_bad}</code></pre>
-          </div>
-          <div style="background: #080c14; border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; padding: 10px;">
-            <span style="font-size: 0.72rem; color: #34d399; font-weight: 700;">✅ ENFOQUE PYTHONIC / SENIOR:</span>
-            <pre style="font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; margin-top: 4px; overflow-x: auto;"><code>${lesson.code_good}</code></pre>
-          </div>
-        </div>
-
-        <!-- Cuestionario / Quizz -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px; margin-bottom: 16px;">
-          <h4 style="font-size: 0.9rem; margin-bottom: 8px;">❓ Quizz de Verificación (+20 XP):</h4>
-          <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 10px;">${lesson.quiz.question}</p>
-          <div id="quizOptionsList">
-            ${lesson.quiz.options.map((opt, idx) => `
-              <button class="btn-secondary" style="width: 100%; text-align: left; margin-bottom: 6px; font-size: 0.8rem;" onclick="app.submitQuizAnswer(${idx}, ${lesson.quiz.answer}, '${lesson.quiz.explanation.replace(/'/g, "\\'")}')">
-                ${String.fromCharCode(65 + idx)}) ${opt}
-              </button>
-            `).join("")}
-          </div>
-          <div id="quizFeedbackBox" style="display: none; margin-top: 8px; padding: 8px; border-radius: 6px; font-size: 0.82rem;"></div>
-        </div>
-
-        <!-- Reto de Código -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px;">
-          <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 4px;">💻 Reto de Código (+50 XP):</h4>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">${lesson.exercise.instructions}</p>
-          
-          <button class="accordion-btn" onclick="app.toggleAccordion('hintAccordion')">
-            <span>💡 Ver Atajos & Pistas de Resolución</span>
-            <span>▼</span>
-          </button>
-          <div id="hintAccordion" class="accordion-content">
-            ${this.formatMarkdown(lesson.exercise.hints || "Pistas no disponibles.")}
-          </div>
-
-          <textarea id="lessonCodeEditor" class="code-editor-area">${lesson.exercise.starter_code}</textarea>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-            <button class="btn-primary" onclick="app.executeLessonCode('${blockId}', '${lessonId}')">⚡ Ejecutar Código</button>
-          </div>
-
-          <div id="codeTerminalOutput" style="display: none; background: #03060a; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; margin-top: 10px; font-family: var(--font-mono); font-size: 0.8rem;"></div>
-
-          <button class="accordion-btn" onclick="app.toggleAccordion('solAccordion')" style="margin-top: 10px;">
-            <span>🔍 Ver Explicación Detallada del Código</span>
-            <span>▼</span>
-          </button>
-          <div id="solAccordion" class="accordion-content">
-            ${this.formatMarkdown(lesson.exercise.solution_explanation || "Explicación en desarrollo.")}
-          </div>
-        </div>
-      `;
-
-      modal.style.display = "flex";
+      if (res.ok) {
+        const data = await res.json();
+        lesson = data.lesson;
+      }
     } catch (e) {
-      alert("Error al cargar la lección: " + e);
+      // Fallback local
     }
+
+    if (!lesson && window.CURRICULUM_FALLBACK) {
+      const blk = window.CURRICULUM_FALLBACK.find(b => b.id === blockId);
+      if (blk) lesson = blk.lessons.find(l => l.id === lessonId);
+    }
+
+    if (!lesson) {
+      alert("No se pudo cargar la información de la lección.");
+      return;
+    }
+
+    const modal = document.getElementById("viewLessonModal");
+    const content = document.getElementById("lessonModalDetail");
+
+    content.innerHTML = `
+      <div style="margin-bottom: 14px;">
+        <span style="font-size: 0.75rem; color: var(--accent-gold); font-weight: 700;">ESTACIÓN DE APRENDIZAJE</span>
+        <h2 style="font-size: 1.25rem; font-weight: 800; margin-top: 4px;">${lesson.title}</h2>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; font-size: 0.88rem; line-height: 1.6; border: 1px solid var(--border-color); margin-bottom: 16px;">
+        ${this.formatMarkdown(lesson.theory)}
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 8px;">⚖️ Antipatrón vs Código Pythonico:</h4>
+        <div style="background: #080c14; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+          <span style="font-size: 0.72rem; color: #f87171; font-weight: 700;">❌ ANTIPATRÓN LENTO:</span>
+          <pre style="font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; margin-top: 4px; overflow-x: auto;"><code>${lesson.code_bad}</code></pre>
+        </div>
+        <div style="background: #080c14; border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 6px; padding: 10px;">
+          <span style="font-size: 0.72rem; color: #34d399; font-weight: 700;">✅ ENFOQUE PYTHONIC / SENIOR:</span>
+          <pre style="font-family: var(--font-mono); font-size: 0.8rem; color: #cbd5e1; margin-top: 4px; overflow-x: auto;"><code>${lesson.code_good}</code></pre>
+        </div>
+      </div>
+
+      <!-- Cuestionario / Quizz -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px; margin-bottom: 16px;">
+        <h4 style="font-size: 0.9rem; margin-bottom: 8px;">❓ Quizz de Verificación (+20 XP):</h4>
+        <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 10px;">${lesson.quiz.question}</p>
+        <div id="quizOptionsList">
+          ${lesson.quiz.options.map((opt, idx) => `
+            <button class="btn-secondary" style="width: 100%; text-align: left; margin-bottom: 6px; font-size: 0.8rem;" onclick="app.submitQuizAnswer(${idx}, ${lesson.quiz.answer}, '${lesson.quiz.explanation.replace(/'/g, "\\'")}')">
+              ${String.fromCharCode(65 + idx)}) ${opt}
+            </button>
+          `).join("")}
+        </div>
+        <div id="quizFeedbackBox" style="display: none; margin-top: 8px; padding: 8px; border-radius: 6px; font-size: 0.82rem;"></div>
+      </div>
+
+      <!-- Reto de Código -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px;">
+        <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 4px;">💻 Reto de Código (+50 XP):</h4>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">${lesson.exercise.instructions}</p>
+        
+        <button class="accordion-btn" onclick="app.toggleAccordion('hintAccordion')">
+          <span>💡 Ver Atajos & Pistas de Resolución</span>
+          <span>▼</span>
+        </button>
+        <div id="hintAccordion" class="accordion-content">
+          ${this.formatMarkdown(lesson.exercise.hints || "Pistas no disponibles.")}
+        </div>
+
+        <textarea id="lessonCodeEditor" class="code-editor-area">${lesson.exercise.starter_code}</textarea>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <button class="btn-primary" onclick="app.executeLessonCode('${blockId}', '${lessonId}')">⚡ Ejecutar Código</button>
+        </div>
+
+        <div id="codeTerminalOutput" style="display: none; background: #03060a; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; margin-top: 10px; font-family: var(--font-mono); font-size: 0.8rem;"></div>
+
+        <button class="accordion-btn" onclick="app.toggleAccordion('solAccordion')" style="margin-top: 10px;">
+          <span>🔍 Ver Explicación Detallada del Código</span>
+          <span>▼</span>
+        </button>
+        <div id="solAccordion" class="accordion-content">
+          ${this.formatMarkdown(lesson.exercise.solution_explanation || "Explicación en desarrollo.")}
+        </div>
+      </div>
+    `;
+
+    modal.style.display = "flex";
   }
 
   closeLessonModal() {
@@ -532,11 +693,14 @@ class AppController {
         
         if (!this.user.completedLessons.includes(lessonId)) {
           this.user.completedLessons.push(lessonId);
+          localStorage.setItem("PYTHON_MASTER_COMPLETED", JSON.stringify(this.user.completedLessons));
+          
           fetch(this.apiUrl("/api/progress"), {
             method: "POST",
             headers: this.getAuthHeaders(),
             body: JSON.stringify({ block_id: blockId, lesson_id: lessonId, completed: true, score: 100, xp_earned: 50 })
-          });
+          }).catch(() => {});
+
           this.loadBlockNodes(blockId);
           this.updateHeaderStats();
         }
@@ -544,22 +708,28 @@ class AppController {
         term.innerHTML = `<span style="color: #f87171;">❌ PRUEBAS FALLIDAS:</span><br><pre style="color: #cbd5e1; margin-top: 4px;">${data.stderr || data.stdout || 'La prueba de aserción no se cumplió.'}</pre>`;
       }
     } catch (e) {
-      term.innerHTML = `<span style="color: #f87171;">Error al ejecutar: ${e}</span>`;
+      term.innerHTML = `<span style="color: #f87171;">Nota: Para ejecutar código Python real en el servidor se requiere conectar el Backend en Render (pulsa ⚙️).</span>`;
     }
   }
 
   // ==================== CURSO DE SQL ====================
   async loadSqlChallenges() {
+    let loaded = false;
     try {
       const res = await fetch(this.apiUrl("/api/sql/challenges"));
       if (res.ok) {
         const data = await res.json();
         this.sqlChallenges = data.challenges || [];
-        this.renderSqlMissions();
+        loaded = true;
       }
     } catch (e) {
-      console.warn("Error cargando misiones SQL:", e);
+      // Ignorar
     }
+
+    if (!loaded && window.SQL_CHALLENGES_FALLBACK) {
+      this.sqlChallenges = window.SQL_CHALLENGES_FALLBACK;
+    }
+    this.renderSqlMissions();
   }
 
   renderSqlMissions() {
@@ -675,7 +845,7 @@ class AppController {
       }
 
     } catch (e) {
-      tableContainer.innerHTML = `<div style="padding: 14px; color: #f87171;">Error de conexión con el motor SQL: ${e}</div>`;
+      tableContainer.innerHTML = `<div style="padding: 14px; color: #f87171;">Para consultar la base de datos de Supabase en vivo necesitas conectar tu servicio en Render (pulsa ⚙️).</div>`;
     }
   }
 
@@ -685,28 +855,60 @@ class AppController {
     content.style.display = isHidden ? "block" : "none";
 
     if (isHidden) {
+      let tablesData = null;
       try {
         const res = await fetch(this.apiUrl("/api/sql/schema"));
-        const data = await res.json();
-        const grid = document.getElementById("schemaTablesGrid");
-        grid.innerHTML = "";
-
-        Object.entries(data.tables).forEach(([tableName, cols]) => {
-          const card = document.createElement("div");
-          card.className = "schema-table-card";
-          card.innerHTML = `
-            <div class="schema-table-name">📄 ${tableName}</div>
-            ${cols.map(c => `
-              <div class="schema-col-item">
-                • <strong>${c.name}</strong> (${c.type}) ${c.pk ? '🔑 PK' : ''} ${c.fk ? '🔗 FK' : ''}
-              </div>
-            `).join("")}
-          `;
-          grid.appendChild(card);
-        });
+        if (res.ok) {
+          const data = await res.json();
+          tablesData = data.tables;
+        }
       } catch (e) {
-        console.error(e);
+        // Fallback schema
       }
+
+      if (!tablesData) {
+        tablesData = {
+          "usuarios": [
+            {"name": "id", "type": "INTEGER", "pk": true},
+            {"name": "nombre", "type": "VARCHAR"},
+            {"name": "email", "type": "VARCHAR"},
+            {"name": "rol", "type": "VARCHAR"},
+            {"name": "saldo", "type": "NUMERIC"},
+            {"name": "activo", "type": "BOOLEAN"}
+          ],
+          "productos": [
+            {"name": "id", "type": "INTEGER", "pk": true},
+            {"name": "nombre", "type": "VARCHAR"},
+            {"name": "categoria", "type": "VARCHAR"},
+            {"name": "precio", "type": "NUMERIC"},
+            {"name": "stock", "type": "INTEGER"}
+          ],
+          "reservas_hotel": [
+            {"name": "id", "type": "INTEGER", "pk": true},
+            {"name": "cliente_nombre", "type": "VARCHAR"},
+            {"name": "habitacion_tipo", "type": "VARCHAR"},
+            {"name": "noches", "type": "INTEGER"},
+            {"name": "total", "type": "NUMERIC"}
+          ]
+        };
+      }
+
+      const grid = document.getElementById("schemaTablesGrid");
+      grid.innerHTML = "";
+
+      Object.entries(tablesData).forEach(([tableName, cols]) => {
+        const card = document.createElement("div");
+        card.className = "schema-table-card";
+        card.innerHTML = `
+          <div class="schema-table-name">📄 ${tableName}</div>
+          ${cols.map(c => `
+            <div class="schema-col-item">
+              • <strong>${c.name}</strong> (${c.type}) ${c.pk ? '🔑 PK' : ''} ${c.fk ? '🔗 FK' : ''}
+            </div>
+          `).join("")}
+        `;
+        grid.appendChild(card);
+      });
     }
   }
 
@@ -720,7 +922,7 @@ class AppController {
       const data = await res.json();
       alert(`🌱 ${data.message}`);
     } catch (e) {
-      alert("Error al sembrar la base de datos: " + e);
+      alert("Para sembrar datos en Supabase se requiere conectar la API en Render (pulsa ⚙️).");
     }
   }
 
@@ -731,6 +933,7 @@ class AppController {
     box.style.display = "block";
     box.innerHTML = "Calculando...";
 
+    // Evaluar expresión en backend si está disponible o con JS seguro
     try {
       const res = await fetch(this.apiUrl("/api/microapps/calculator"), {
         method: "POST",
@@ -745,11 +948,23 @@ class AppController {
           <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">${data.explanation}</p>
         `;
         this.addXP(5, "Uso de Calculadora AST");
-      } else {
-        box.innerHTML = `<span style="color: #f87171;">${data.error}</span>`;
+        return;
       }
     } catch (e) {
-      box.innerHTML = `Error: ${e}`;
+      // Fallback evaluación matemática simple en cliente
+      try {
+        const clean = expr.replace(/\*\*/g, "^");
+        const val = Function(`'use strict'; return (${expr.replace(/\*\*/g, '**').replace(/\/\//g, '/')})`)();
+        box.innerHTML = `
+          <strong style="color: #38bdf8; font-size: 1.1rem;">Resultado: ${val}</strong><br>
+          <span style="color: var(--accent-gold); font-size: 0.75rem;">Modo de cálculo local</span>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Evaluado de acuerdo con la precedencia PEMDAS.</p>
+        `;
+        this.addXP(5, "Uso de Calculadora AST");
+        return;
+      } catch (err) {
+        box.innerHTML = `<span style="color: #f87171;">Expresión matemática no válida.</span>`;
+      }
     }
   }
 
@@ -789,11 +1004,16 @@ class AppController {
   }
 
   async runIdEmailApp() {
-    const nombre = document.getElementById("idNombre").value;
-    const apellido = document.getElementById("idApellido").value;
+    const nombre = document.getElementById("idNombre").value.trim();
+    const apellido = document.getElementById("idApellido").value.trim();
     const anio = parseInt(document.getElementById("idAnio").value);
-    const empresa = document.getElementById("idEmpresa").value;
+    const empresa = document.getElementById("idEmpresa").value.trim() || "globalmentoring";
     const box = document.getElementById("idEmailOutput");
+
+    if (!nombre || !apellido) {
+      alert("Por favor ingresa nombre y apellido.");
+      return;
+    }
 
     box.style.display = "block";
     box.innerHTML = "Generando...";
@@ -802,7 +1022,7 @@ class AppController {
       const res = await fetch(this.apiUrl("/api/microapps/generate_id_email"), {
         method: "POST",
         headers: this.getAuthHeaders(),
-        body: JSON.stringify({ nombre, apellido, anio_nacimiento: anio, empresa })
+        body: JSON.stringify({ nombre, apellido, anio_nacimiento: anio || 1995, empresa })
       });
       const data = await res.json();
       if (data.success) {
@@ -817,44 +1037,51 @@ class AppController {
           </div>
         `;
         this.addXP(10, "Generación de ID y Email");
-      } else {
-        box.innerHTML = `<span style="color: #f87171;">${data.detail || data.error}</span>`;
+        return;
       }
     } catch (e) {
-      box.innerHTML = `Error: ${e}`;
+      // Fallback local instantáneo con slicing
+      const idUnico = `${nombre.slice(0, 2).toUpperCase()}${apellido.slice(0, 2).toUpperCase()}${String(anio || 95).slice(-2)}${Math.floor(1000 + Math.random() * 9000)}`;
+      const email = `${nombre.toLowerCase()}.${apellido.toLowerCase()}@${empresa.toLowerCase()}.com`;
+      box.innerHTML = `
+        <div style="margin-bottom: 6px;">
+          <span style="color: var(--accent-gold); font-size: 0.72rem; font-weight: 700;">ID ÚNICO NORMALIZADO (Reto 53):</span>
+          <div style="font-family: var(--font-mono); font-size: 1rem; color: #38bdf8;">${idUnico}</div>
+        </div>
+        <div>
+          <span style="color: #34d399; font-size: 0.72rem; font-weight: 700;">EMAIL INSTITUCIONAL (Reto 40):</span>
+          <div style="font-family: var(--font-mono); font-size: 0.88rem; color: #f8fafc;">${email}</div>
+        </div>
+      `;
+      this.addXP(10, "Generación de ID y Email");
     }
   }
 
   async runHotelApp() {
     const cliente = document.getElementById("hotelCliente").value;
     const habitacion = document.getElementById("hotelHabitacion").value;
-    const noches = parseInt(document.getElementById("hotelNoches").value);
+    const noches = parseInt(document.getElementById("hotelNoches").value) || 1;
     const desayuno = document.getElementById("hotelDesayuno").checked;
     const box = document.getElementById("hotelOutput");
 
     box.style.display = "block";
     box.innerHTML = "Cotizando...";
 
-    try {
-      const res = await fetch(this.apiUrl("/api/microapps/hotel_booking"), {
-        method: "POST",
-        headers: this.getAuthHeaders(),
-        body: JSON.stringify({ cliente, noches, tipo_habitacion: habitacion, incluye_desayuno: desayuno })
-      });
-      const data = await res.json();
-      if (data.success) {
-        box.innerHTML = `
-          <strong style="color: var(--primary);">Reserva para ${data.cliente}</strong><br>
-          <span style="font-size: 0.8rem;">Estancia: ${data.noches} noches • Tarifa: $${data.tarifa_noche}/noche</span><br>
-          <span style="font-size: 0.8rem;">Subtotal: $${data.subtotal}</span><br>
-          <span style="font-size: 0.8rem; color: #34d399;">Descuento aplicado: -$${data.descuento_aplicado}</span><br>
-          <strong style="color: var(--accent-gold); font-size: 1.05rem;">Total Final: $${data.total_a_pagar}</strong>
-        `;
-        this.addXP(10, "Cotización de Reserva de Hotel");
-      }
-    } catch (e) {
-      box.innerHTML = `Error: ${e}`;
-    }
+    const precios = { estandar: 75.0, vista_mar: 180.0, presidencial: 320.0 };
+    const tarifa = precios[habitacion] || 75.0;
+    const subtotal = tarifa * noches;
+    const desc = (noches > 3) ? subtotal * 0.10 : 0.0;
+    const costDesayuno = desayuno ? 20.0 * noches : 0.0;
+    const total = subtotal - desc + costDesayuno;
+
+    box.innerHTML = `
+      <strong style="color: var(--primary);">Reserva para ${cliente}</strong><br>
+      <span style="font-size: 0.8rem;">Estancia: ${noches} noches • Tarifa: $${tarifa}/noche</span><br>
+      <span style="font-size: 0.8rem;">Subtotal: $${subtotal.toFixed(2)}</span><br>
+      <span style="font-size: 0.8rem; color: #34d399;">Descuento aplicado: -$${desc.toFixed(2)}</span><br>
+      <strong style="color: var(--accent-gold); font-size: 1.05rem;">Total Final: $${total.toFixed(2)}</strong>
+    `;
+    this.addXP(10, "Cotización de Reserva de Hotel");
   }
 
   // ==================== CLASES BREVES ====================
@@ -914,8 +1141,13 @@ class AppController {
     const container = document.getElementById("achievementsList");
     if (!container) return;
 
+    let achList = this.user.achievements;
+    if ((!achList || achList.length === 0) && window.ACHIEVEMENTS_FALLBACK) {
+      achList = window.ACHIEVEMENTS_FALLBACK;
+    }
+
     container.innerHTML = "";
-    this.user.achievements.forEach(a => {
+    (achList || []).forEach(a => {
       const card = document.createElement("div");
       card.className = `badge-card ${a.unlocked ? 'unlocked' : ''}`;
       card.innerHTML = `
@@ -930,6 +1162,29 @@ class AppController {
       `;
       container.appendChild(card);
     });
+  }
+
+  // ==================== NAVEGACIÓN ====================
+  switchTab(tabKey) {
+    const tabs = {
+      camino: "tabCamino",
+      sql: "tabSql",
+      apps: "tabApps",
+      clases: "tabClases",
+      logros: "tabLogros"
+    };
+
+    document.querySelectorAll(".view-tab").forEach(tab => tab.classList.remove("active"));
+    const targetTab = document.getElementById(tabs[tabKey]);
+    if (targetTab) targetTab.classList.add("active");
+
+    document.querySelectorAll(".mobile-nav .nav-item").forEach(item => item.classList.remove("active"));
+    const navButtons = document.querySelectorAll(".mobile-nav .nav-item");
+    const tabIndex = Object.keys(tabs).indexOf(tabKey);
+    if (navButtons[tabIndex]) navButtons[tabIndex].classList.add("active");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (tabKey === "logros") this.renderAchievements();
   }
 
   // ==================== UTILIDADES ====================

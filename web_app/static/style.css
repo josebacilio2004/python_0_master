@@ -1070,3 +1070,19 @@ body {
   background: var(--primary);
   color: #0f172a;
 }
+
+.api-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b; /* yellow for local / unverified */
+  margin-left: 2px;
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
+
+.api-status-dot.online {
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}

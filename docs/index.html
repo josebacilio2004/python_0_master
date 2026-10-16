@@ -42,7 +42,7 @@
           🔑 <span class="hide-mobile">Ingresar</span>
         </button>
         <button class="btn-api-config" onclick="app.openApiModal()" title="Configurar URL del Backend en Render">
-          ⚙️
+          ⚙️ <span class="api-status-dot" id="apiStatusDot"></span>
         </button>
       </div>
     </div>
@@ -362,16 +362,23 @@
 
     <!-- ==================== VISTA MODAL: CONFIGURACIÓN DE API (GITHUB PAGES) ==================== -->
     <section id="viewApiModal" class="lesson-modal" style="display: none;">
-      <div class="lesson-modal-content" style="max-width: 480px;">
+      <div class="lesson-modal-content" style="max-width: 500px;">
         <button class="btn-close-modal" onclick="app.closeApiModal()">✕ Cerrar</button>
-        <h3 style="font-size: 1rem; color: var(--primary); margin-bottom: 8px;">⚙️ Conexión Backend API</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Si abres la aplicación desde <strong>GitHub Pages</strong>, ingresa la URL de tu servicio web en Render para conectar la base de datos de Supabase.
+        <h3 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 8px;">⚙️ Conexión Backend & Supabase</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+          En <strong>GitHub Pages</strong>, el frontend necesita la URL de tu servicio web en Render para ejecutar código Python real y consultar la base de datos de <strong>Supabase</strong>.
         </p>
+        <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 10px; font-size: 0.78rem; color: #94a3b8; margin-bottom: 12px;">
+          📌 <strong>¿Dónde está tu URL de Render?</strong><br>
+          1. Entra a tu Dashboard en <a href="https://dashboard.render.com" target="_blank" style="color: var(--primary);">dashboard.render.com</a>.<br>
+          2. Abre tu servicio (ej. <em>python-master-game</em>) y copia el enlace superior (ej: <code>https://python-master-game-xxxx.onrender.com</code>).<br>
+          3. Pégalo en el campo de abajo y pulsa <strong>Probar Conexión</strong>.
+        </div>
         <input type="text" id="inputApiBaseUrl" class="app-input" placeholder="https://tu-servicio.onrender.com">
-        <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <div id="apiTestFeedback" style="margin-top: 8px; font-size: 0.8rem; display: none;"></div>
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
           <button class="btn-secondary" style="flex: 1;" onclick="app.setLocalApi()">Usar Localhost</button>
-          <button class="btn-primary" style="flex: 1;" onclick="app.saveApiBaseUrl()">Guardar URL</button>
+          <button class="btn-primary" style="flex: 1;" onclick="app.testAndSaveApiUrl()">Probar & Guardar ⚡</button>
         </div>
       </div>
     </section>
@@ -402,6 +409,7 @@
     </button>
   </nav>
 
+  <script src="curriculum_fallback.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
