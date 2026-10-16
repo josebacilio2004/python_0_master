@@ -59,6 +59,16 @@ def unir_cadenas_rapido(lista_palabras: list) -> str:
     # Tu código aquí
     pass
 """,
+                    "puzzle_pieces": [
+                        "def convertir_temperatura(celsius: float) -> dict:",
+                        "    f = (celsius * 9 / 5) + 32",
+                        "    k = celsius + 273.15",
+                        "    return {'fahrenheit': f, 'kelvin': k}"
+                    ],
+                    "puzzle_distractors": [
+                        "    return [f, k]",
+                        "    f = celsius * 9 / 5"
+                    ],
                     "test_code": """
 res = convertir_temperatura(0.0)
 assert res['fahrenheit'] == 32.0, f"Esperado 32.0, obtenido {res.get('fahrenheit')}"
@@ -112,6 +122,19 @@ for indice, fruta in enumerate(frutas):
     # Tu código aquí
     pass
 """,
+                    "puzzle_pieces": [
+                        "def es_primo(numero: int) -> bool:",
+                        "    if numero <= 1:",
+                        "        return False",
+                        "    for i in range(2, int(numero**0.5) + 1):",
+                        "        if numero % i == 0:",
+                        "            return False",
+                        "    return True"
+                    ],
+                    "puzzle_distractors": [
+                        "    if numero == 1: return True",
+                        "    for i in range(2, numero):"
+                    ],
                     "test_code": """
 assert es_primo(7) == True, "7 debería ser primo"
 assert es_primo(10) == False, "10 no debería ser primo"
@@ -167,6 +190,14 @@ caros = {prod: precio for prod, precio in precios.items() if precio > 100}""",
     # Tu solución con list comprehension
     pass
 """,
+                    "puzzle_pieces": [
+                        "def filtrar_pares_cuadrados(numeros: list) -> list:",
+                        "    return [x**2 for x in numeros if x % 2 == 0]"
+                    ],
+                    "puzzle_distractors": [
+                        "    return [x for x in numeros if x % 2 == 0]",
+                        "    return [x**2 for x in numeros if x % 2 != 0]"
+                    ],
                     "test_code": """
 res = filtrar_pares_cuadrados([1, 2, 3, 4, 5, 6])
 assert res == [4, 16, 36], f"Esperado [4, 16, 36], obtenido {res}"
@@ -221,6 +252,20 @@ def registrar_evento_optimo(evento: str, log: list = None) -> list:
     # Tu código aquí
     pass
 """,
+                    "puzzle_pieces": [
+                        "def fizz_buzz(n: int) -> list:",
+                        "    res = []",
+                        "    for i in range(1, n + 1):",
+                        "        if i % 15 == 0: res.append('FizzBuzz')",
+                        "        elif i % 3 == 0: res.append('Fizz')",
+                        "        elif i % 5 == 0: res.append('Buzz')",
+                        "        else: res.append(str(i))",
+                        "    return res"
+                    ],
+                    "puzzle_distractors": [
+                        "    for i in range(n):",
+                        "        if i % 3 == 0: res.append('FizzBuzz')"
+                    ],
                     "test_code": """
 res = fizz_buzz(5)
 assert res == ['1', '2', 'Fizz', '4', 'Buzz'], f"Obtenido {res}"

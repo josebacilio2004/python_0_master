@@ -9,11 +9,13 @@ class AppController {
     const isGitHubPages = window.location.hostname.includes("github.io");
     const savedApi = localStorage.getItem("PYTHON_MASTER_API_URL");
     
-    // Si el usuario configuró una URL la usa; si está en GitHub Pages y no hay configurada, intenta localhost o Render
+    // Si el usuario configuró una URL la usa; si está en GitHub Pages y no hay configurada, conecta a Render automáticamente
     if (savedApi) {
       this.apiBaseUrl = savedApi.replace(/\/$/, "");
+    } else if (isGitHubPages) {
+      this.apiBaseUrl = "https://python-master-game-nigw.onrender.com";
     } else {
-      this.apiBaseUrl = ""; // Mismo origen por defecto
+      this.apiBaseUrl = ""; // Mismo origen por defecto en local
     }
 
     this.token = localStorage.getItem("PYTHON_MASTER_TOKEN") || null;
@@ -39,6 +41,13 @@ class AppController {
     this.currentBlockId = null;
     this.currentLessonId = null;
     this.isBackendOnline = false;
+
+    // Estado del Sistema de Rompecabezas (Parsons Problems)
+    this.currentPuzzleLesson = null;
+    this.puzzleState = {
+      pool: [],
+      assembled: []
+    };
 
     this.atmCurrentBalance = 1000.00;
   }
@@ -578,6 +587,19 @@ class AppController {
       return;
     }
 
+    const hasPuzzle = lesson.exercise && Array.isArray(lesson.exercise.puzzle_pieces) && lesson.exercise.puzzle_pieces.length > 0;
+    if (hasPuzzle) {
+      this.currentPuzzleLesson = lesson;
+      const rawPieces = [
+        ...lesson.exercise.puzzle_pieces,
+        ...(lesson.exercise.puzzle_distractors || [])
+      ];
+      this.puzzleState = {
+        pool: rawPieces.map((p, idx) => ({ id: `p_${idx}`, text: p })).sort(() => Math.random() - 0.5),
+        assembled: []
+      };
+    }
+
     const modal = document.getElementById("viewLessonModal");
     const content = document.getElementById("lessonModalDetail");
 
@@ -630,10 +652,39 @@ class AppController {
           ${this.formatMarkdown(lesson.exercise.hints || "Pistas no disponibles.")}
         </div>
 
-        <textarea id="lessonCodeEditor" class="code-editor-area">${lesson.exercise.starter_code}</textarea>
+        ${hasPuzzle ? `
+          <div class="editor-mode-tabs" style="margin-top: 12px; margin-bottom: 10px;">
+            <button id="btnModePuzzle" class="editor-mode-btn active" onclick="app.switchEditorMode('puzzle')">🧩 Armar Rompecabezas (Bloques)</button>
+            <button id="btnModeCode" class="editor-mode-btn" onclick="app.switchEditorMode('code')">💻 Escribir Código Libre</button>
+          </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-          <button class="btn-primary" onclick="app.executeLessonCode('${blockId}', '${lessonId}')">⚡ Ejecutar Código</button>
+          <!-- Modo Rompecabezas de Código -->
+          <div id="puzzleViewSection" class="puzzle-container">
+            <div class="puzzle-section-label">
+              <span>📦 Piezas Disponibles (Toca para agregar a tu solución):</span>
+              <button class="btn-secondary" style="font-size: 0.7rem; padding: 2px 8px;" onclick="app.resetPuzzle()">🔄 Reiniciar</button>
+            </div>
+            <div id="puzzlePool" class="puzzle-pool"></div>
+
+            <div class="puzzle-section-label" style="margin-top: 12px;">
+              <span>🧩 Función Ensamblada (Toca una pieza para retirarla):</span>
+            </div>
+            <div id="puzzleDropzone" class="puzzle-dropzone"></div>
+
+            <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-primary" style="flex: 1;" onclick="app.testPuzzleSolution('${blockId}', '${lessonId}')">⚡ Probar Solución del Rompecabezas</button>
+              <button class="btn-secondary" onclick="app.transferPuzzleToEditor()">Editar como Texto →</button>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Modo Editor de Código Libre -->
+        <div id="codeViewSection" style="${hasPuzzle ? 'display: none;' : ''}">
+          <textarea id="lessonCodeEditor" class="code-editor-area">${lesson.exercise.starter_code}</textarea>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <button class="btn-primary" onclick="app.executeLessonCode('${blockId}', '${lessonId}')">⚡ Ejecutar Código</button>
+          </div>
         </div>
 
         <div id="codeTerminalOutput" style="display: none; background: #03060a; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; margin-top: 10px; font-family: var(--font-mono); font-size: 0.8rem;"></div>
@@ -647,6 +698,10 @@ class AppController {
         </div>
       </div>
     `;
+
+    if (hasPuzzle) {
+      this.renderPuzzleUI();
+    }
 
     modal.style.display = "flex";
   }
@@ -710,6 +765,132 @@ class AppController {
     } catch (e) {
       term.innerHTML = `<span style="color: #f87171;">Nota: Para ejecutar código Python real en el servidor se requiere conectar el Backend en Render (pulsa ⚙️).</span>`;
     }
+  }
+
+  // ==================== MÉTODOS DEL MODO ROMPECABEZAS (PARSONS) ====================
+  switchEditorMode(mode) {
+    const btnPuzzle = document.getElementById("btnModePuzzle");
+    const btnCode = document.getElementById("btnModeCode");
+    const puzzleSec = document.getElementById("puzzleViewSection");
+    const codeSec = document.getElementById("codeViewSection");
+
+    if (mode === "puzzle") {
+      if (btnPuzzle) btnPuzzle.classList.add("active");
+      if (btnCode) btnCode.classList.remove("active");
+      if (puzzleSec) puzzleSec.style.display = "block";
+      if (codeSec) codeSec.style.display = "none";
+    } else {
+      if (btnPuzzle) btnPuzzle.classList.remove("active");
+      if (btnCode) btnCode.classList.add("active");
+      if (puzzleSec) puzzleSec.style.display = "none";
+      if (codeSec) codeSec.style.display = "block";
+    }
+  }
+
+  renderPuzzleUI() {
+    const poolEl = document.getElementById("puzzlePool");
+    const dropEl = document.getElementById("puzzleDropzone");
+    if (!poolEl || !dropEl) return;
+
+    // Renderizar piezas disponibles
+    poolEl.innerHTML = "";
+    if (this.puzzleState.pool.length === 0) {
+      poolEl.innerHTML = `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; padding: 4px;">¡Todas las piezas han sido agregadas!</span>`;
+    } else {
+      this.puzzleState.pool.forEach((piece) => {
+        const item = document.createElement("div");
+        item.className = "puzzle-piece";
+        item.innerHTML = `
+          <code>${this.escapeHtml(piece.text)}</code>
+          <span style="font-size: 0.72rem; color: var(--primary); font-weight: 700;">+ Agregar</span>
+        `;
+        item.onclick = () => this.selectPuzzlePiece(piece.id);
+        poolEl.appendChild(item);
+      });
+    }
+
+    // Renderizar piezas ensambladas
+    dropEl.innerHTML = "";
+    this.puzzleState.assembled.forEach((piece, idx) => {
+      const item = document.createElement("div");
+      item.className = "puzzle-piece-assembled";
+      item.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: var(--accent-gold); font-weight: 700; font-size: 0.75rem;">${idx + 1}.</span>
+          <code>${this.escapeHtml(piece.text)}</code>
+        </div>
+        <span class="piece-tag-remove">✖ Quitar</span>
+      `;
+      item.onclick = () => this.removePuzzlePiece(piece.id);
+      dropEl.appendChild(item);
+    });
+  }
+
+  selectPuzzlePiece(pieceId) {
+    const idx = this.puzzleState.pool.findIndex(p => p.id === pieceId);
+    if (idx !== -1) {
+      const [piece] = this.puzzleState.pool.splice(idx, 1);
+      this.puzzleState.assembled.push(piece);
+      this.renderPuzzleUI();
+    }
+  }
+
+  removePuzzlePiece(pieceId) {
+    const idx = this.puzzleState.assembled.findIndex(p => p.id === pieceId);
+    if (idx !== -1) {
+      const [piece] = this.puzzleState.assembled.splice(idx, 1);
+      this.puzzleState.pool.push(piece);
+      this.renderPuzzleUI();
+    }
+  }
+
+  resetPuzzle() {
+    if (!this.currentPuzzleLesson || !this.currentPuzzleLesson.exercise) return;
+    const rawPieces = [
+      ...this.currentPuzzleLesson.exercise.puzzle_pieces,
+      ...(this.currentPuzzleLesson.exercise.puzzle_distractors || [])
+    ];
+    this.puzzleState = {
+      pool: rawPieces.map((p, idx) => ({ id: `p_${idx}`, text: p })).sort(() => Math.random() - 0.5),
+      assembled: []
+    };
+    this.renderPuzzleUI();
+  }
+
+  getAssembledPuzzleCode() {
+    return this.puzzleState.assembled.map(p => p.text).join("\n");
+  }
+
+  transferPuzzleToEditor() {
+    const code = this.getAssembledPuzzleCode();
+    const editor = document.getElementById("lessonCodeEditor");
+    if (editor && code.trim()) {
+      editor.value = code;
+    }
+    this.switchEditorMode("code");
+  }
+
+  async testPuzzleSolution(blockId, lessonId) {
+    const code = this.getAssembledPuzzleCode();
+    if (!code.trim()) {
+      alert("Arma al menos una o más piezas antes de probar la solución.");
+      return;
+    }
+    const editor = document.getElementById("lessonCodeEditor");
+    if (editor) {
+      editor.value = code;
+    }
+    await this.executeLessonCode(blockId, lessonId);
+  }
+
+  escapeHtml(str) {
+    if (!str) return "";
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   // ==================== CURSO DE SQL ====================

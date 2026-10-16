@@ -1086,3 +1086,136 @@ body {
   background: #10b981;
   box-shadow: 0 0 6px #10b981;
 }
+
+/* ==================== MODO ROMPECABEZAS (PARSONS PUZZLE) ==================== */
+.editor-mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.editor-mode-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editor-mode-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.puzzle-container {
+  background: #06090e;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.puzzle-section-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.puzzle-pool {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  min-height: 50px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.puzzle-piece {
+  background: #0f172a;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.puzzle-piece:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.puzzle-dropzone {
+  min-height: 80px;
+  background: rgba(16, 185, 129, 0.04);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.puzzle-dropzone:empty::before {
+  content: "Toca las piezas de arriba en el orden correcto para armar la función...";
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+  padding: 10px;
+  display: block;
+}
+
+.puzzle-piece-assembled {
+  background: #09121d;
+  border: 1px solid #10b981;
+  color: #f8fafc;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.puzzle-piece-assembled:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+.piece-tag-remove {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.puzzle-piece-assembled:hover .piece-tag-remove {
+  color: #ef4444;
+}
