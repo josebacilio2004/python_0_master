@@ -1,12 +1,30 @@
 /**
  * Python & SQL Master - Game Edition
- * Frontend Single Page Application (Compatible con iPhone 7 / Safari iOS 15)
+ * Frontend Single Page Application (Compatible con iPhone 7 / Safari iOS 15 & GitHub Pages)
  */
 
 class AppController {
   constructor() {
+    // Detección de URL base de la API (para soporte de GitHub Pages y Local)
+    const isGitHubPages = window.location.hostname.includes("github.io");
+    const savedApi = localStorage.getItem("PYTHON_MASTER_API_URL");
+    
+    // Si está en GitHub Pages, usa la URL configurada o la de Render
+    if (savedApi) {
+      this.apiBaseUrl = savedApi.replace(/\/$/, "");
+    } else if (isGitHubPages) {
+      this.apiBaseUrl = "https://python-master-game.onrender.com";
+    } else {
+      this.apiBaseUrl = ""; // Mismo origen (local o Render directo)
+    }
+
+    this.token = localStorage.getItem("PYTHON_MASTER_TOKEN") || null;
+    this.currentUser = JSON.parse(localStorage.getItem("PYTHON_MASTER_USER") || "null");
+
     this.user = {
-      id: "default_user",
+      id: this.currentUser ? this.currentUser.username : "default_user",
+      username: this.currentUser ? this.currentUser.username : "Invitado",
+      fullName: this.currentUser ? this.currentUser.full_name : "Python Master",
       xp: 150,
       level: 1,
       rankTitle: "Recluta del Byte",
@@ -27,6 +45,7 @@ class AppController {
   }
 
   async init() {
+    this.updateAuthButtonUI();
     await this.loadUserProfile();
     await this.loadModules();
     await this.loadSqlChallenges();
@@ -34,10 +53,192 @@ class AppController {
     this.renderBriefClasses();
   }
 
+  apiUrl(endpoint) {
+    if (endpoint.startsWith("http")) return endpoint;
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${this.apiBaseUrl}${cleanEndpoint}`;
+  }
+
+  getAuthHeaders(extraHeaders = {}) {
+    const headers = { "Content-Type": "application/json", ...extraHeaders };
+    if (this.token) {
+      headers["Authorization"] = `Bearer ${this.token}`;
+    }
+    return headers;
+  }
+
+  // ==================== AUTENTICACIÓN & SESIONES ====================
+  openAuthModal() {
+    if (this.token && this.currentUser) {
+      if (confirm(`Sesión activa como: @${this.currentUser.username} (${this.user.xp} XP).\n¿Deseas cerrar sesión?`)) {
+        this.logout();
+      }
+      return;
+    }
+    document.getElementById("viewAuthModal").style.display = "flex";
+    this.switchAuthMode("login");
+  }
+
+  closeAuthModal() {
+    document.getElementById("viewAuthModal").style.display = "none";
+    document.getElementById("authStatusMsg").style.display = "none";
+  }
+
+  switchAuthMode(mode) {
+    const isLogin = (mode === "login");
+    document.getElementById("formLogin").style.display = isLogin ? "block" : "none";
+    document.getElementById("formRegister").style.display = isLogin ? "none" : "block";
+    document.getElementById("btnTabLogin").classList.toggle("active", isLogin);
+    document.getElementById("btnTabRegister").classList.toggle("active", !isLogin);
+    document.getElementById("authStatusMsg").style.display = "none";
+  }
+
+  async submitLogin() {
+    const ident = document.getElementById("loginIdent").value.trim();
+    const pwd = document.getElementById("loginPwd").value.trim();
+    const statusMsg = document.getElementById("authStatusMsg");
+
+    statusMsg.style.display = "block";
+    statusMsg.style.color = "var(--primary)";
+    statusMsg.textContent = "Verificando credenciales...";
+
+    try {
+      const res = await fetch(this.apiUrl("/api/auth/login"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: ident, password: pwd })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.token) {
+        this.token = data.token;
+        this.currentUser = data.user;
+        localStorage.setItem("PYTHON_MASTER_TOKEN", data.token);
+        localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(data.user));
+
+        this.user.id = data.user.username;
+        this.user.username = data.user.username;
+        this.user.fullName = data.user.full_name;
+        this.user.xp = data.user.xp;
+        this.user.level = data.user.level;
+        this.user.rankTitle = data.user.rank_title;
+
+        this.updateAuthButtonUI();
+        this.closeAuthModal();
+        await this.loadUserProfile();
+        alert(`🎉 ¡Bienvenido de nuevo, ${this.user.fullName || this.user.username}!`);
+      } else {
+        statusMsg.style.color = "#f87171";
+        statusMsg.textContent = data.detail || "Credenciales incorrectas.";
+      }
+    } catch (e) {
+      statusMsg.style.color = "#f87171";
+      statusMsg.textContent = "Error de conexión con el servidor.";
+    }
+  }
+
+  async submitRegister() {
+    const username = document.getElementById("regUser").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const fullName = document.getElementById("regFullName").value.trim();
+    const pwd = document.getElementById("regPwd").value.trim();
+    const statusMsg = document.getElementById("authStatusMsg");
+
+    statusMsg.style.display = "block";
+    statusMsg.style.color = "var(--primary)";
+    statusMsg.textContent = "Registrando cuenta en Supabase...";
+
+    try {
+      const res = await fetch(this.apiUrl("/api/auth/register"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, full_name: fullName, password: pwd })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.token) {
+        this.token = data.token;
+        this.currentUser = data.user;
+        localStorage.setItem("PYTHON_MASTER_TOKEN", data.token);
+        localStorage.setItem("PYTHON_MASTER_USER", JSON.stringify(data.user));
+
+        this.user.id = data.user.username;
+        this.user.username = data.user.username;
+        this.user.fullName = data.user.full_name;
+        this.user.xp = data.user.xp;
+        this.user.level = data.user.level;
+        this.user.rankTitle = data.user.rank_title;
+
+        this.updateAuthButtonUI();
+        this.closeAuthModal();
+        await this.loadUserProfile();
+        alert(`🚀 ¡Registro exitoso! Has obtenido tu Pase de Desarrollador con +150 XP de bienvenida.`);
+      } else {
+        statusMsg.style.color = "#f87171";
+        statusMsg.textContent = data.detail || "Error en el registro.";
+      }
+    } catch (e) {
+      statusMsg.style.color = "#f87171";
+      statusMsg.textContent = "Error de conexión con el servidor.";
+    }
+  }
+
+  logout() {
+    this.token = null;
+    this.currentUser = null;
+    localStorage.removeItem("PYTHON_MASTER_TOKEN");
+    localStorage.removeItem("PYTHON_MASTER_USER");
+    this.user.id = "default_user";
+    this.user.username = "Invitado";
+    this.updateAuthButtonUI();
+    this.loadUserProfile();
+    alert("Has cerrado sesión. Jugando en modo invitado.");
+  }
+
+  updateAuthButtonUI() {
+    const btn = document.getElementById("btnAuthHeader");
+    if (!btn) return;
+    if (this.token && this.currentUser) {
+      btn.innerHTML = `👤 <span class="hide-mobile">${this.currentUser.username}</span>`;
+      btn.style.borderColor = "var(--primary)";
+      btn.style.color = "var(--primary)";
+    } else {
+      btn.innerHTML = `🔑 <span class="hide-mobile">Ingresar</span>`;
+      btn.style.borderColor = "rgba(168, 85, 247, 0.4)";
+      btn.style.color = "#c084fc";
+    }
+  }
+
+  // ==================== CONFIGURACIÓN DE API (GITHUB PAGES) ====================
+  openApiModal() {
+    document.getElementById("inputApiBaseUrl").value = this.apiBaseUrl;
+    document.getElementById("viewApiModal").style.display = "flex";
+  }
+
+  closeApiModal() {
+    document.getElementById("viewApiModal").style.display = "none";
+  }
+
+  saveApiBaseUrl() {
+    const val = document.getElementById("inputApiBaseUrl").value.trim().replace(/\/$/, "");
+    this.apiBaseUrl = val;
+    localStorage.setItem("PYTHON_MASTER_API_URL", val);
+    this.closeApiModal();
+    alert(`URL del backend configurada: ${val || 'Mismo Origen (Local)'}\nRecargando datos...`);
+    this.init();
+  }
+
+  setLocalApi() {
+    document.getElementById("inputApiBaseUrl").value = "";
+    this.saveApiBaseUrl();
+  }
+
   // ==================== PERFIL & GAMIFICACIÓN ====================
   async loadUserProfile() {
     try {
-      const res = await fetch("/api/progress");
+      const res = await fetch(this.apiUrl("/api/progress"), {
+        headers: this.getAuthHeaders()
+      });
       if (res.ok) {
         const data = await res.json();
         this.user.xp = data.xp || 150;
@@ -74,9 +275,9 @@ class AppController {
 
   async addXP(amount, reason = "Reto superado") {
     try {
-      const res = await fetch("/api/progress/add_xp", {
+      const res = await fetch(this.apiUrl("/api/progress/add_xp"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({ user_id: this.user.id, xp_amount: amount, reason: reason })
       });
       if (res.ok) {
@@ -107,28 +308,23 @@ class AppController {
       logros: "tabLogros"
     };
 
-    // Ocultar todas las pestañas
     document.querySelectorAll(".view-tab").forEach(tab => tab.classList.remove("active"));
-    
-    // Activar pestaña seleccionada
     const targetTab = document.getElementById(tabs[tabKey]);
     if (targetTab) targetTab.classList.add("active");
 
-    // Actualizar nav móvil
     document.querySelectorAll(".mobile-nav .nav-item").forEach(item => item.classList.remove("active"));
     const navButtons = document.querySelectorAll(".mobile-nav .nav-item");
     const tabIndex = Object.keys(tabs).indexOf(tabKey);
     if (navButtons[tabIndex]) navButtons[tabIndex].classList.add("active");
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-
     if (tabKey === "logros") this.renderAchievements();
   }
 
   // ==================== ROADMAP & LECCIONES ====================
   async loadModules() {
     try {
-      const res = await fetch("/api/modules");
+      const res = await fetch(this.apiUrl("/api/modules"));
       if (res.ok) {
         const data = await res.json();
         this.modules = data.modules || [];
@@ -143,8 +339,7 @@ class AppController {
     if (!container) return;
 
     container.innerHTML = "";
-
-    this.modules.forEach((mod, idx) => {
+    this.modules.forEach((mod) => {
       const card = document.createElement("div");
       card.className = "roadmap-block-card";
       
@@ -161,7 +356,7 @@ class AppController {
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">${mod.description}</p>
         <div class="nodes-timeline" id="nodes_block_${mod.id}">
-          <span style="font-size: 0.75rem; color: var(--text-muted);">Cargando nodos...</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Cargando estaciones...</span>
         </div>
       `;
 
@@ -172,7 +367,7 @@ class AppController {
 
   async loadBlockNodes(blockId) {
     try {
-      const res = await fetch(`/api/modules/${blockId}`);
+      const res = await fetch(this.apiUrl(`/api/modules/${blockId}`));
       if (!res.ok) return;
       const data = await res.json();
       const lessons = data.block.lessons || [];
@@ -181,7 +376,7 @@ class AppController {
       if (!container) return;
 
       container.innerHTML = "";
-      lessons.forEach((les, i) => {
+      lessons.forEach((les) => {
         const isCompleted = this.user.completedLessons.includes(les.id);
         const node = document.createElement("div");
         node.className = `quest-node ${isCompleted ? 'completed' : ''}`;
@@ -198,9 +393,8 @@ class AppController {
   }
 
   async openBlockQuests(blockId) {
-    // Abrir primer nodo no completado del bloque
     try {
-      const res = await fetch(`/api/modules/${blockId}`);
+      const res = await fetch(this.apiUrl(`/api/modules/${blockId}`));
       const data = await res.json();
       const firstLesson = data.block.lessons[0];
       if (firstLesson) {
@@ -216,7 +410,7 @@ class AppController {
     this.currentLessonId = lessonId;
 
     try {
-      const res = await fetch(`/api/modules/${blockId}/lesson/${lessonId}`);
+      const res = await fetch(this.apiUrl(`/api/modules/${blockId}/lesson/${lessonId}`));
       const data = await res.json();
       const lesson = data.lesson;
 
@@ -325,9 +519,9 @@ class AppController {
     term.innerHTML = "⏳ Ejecutando en entorno aislado...";
 
     try {
-      const res = await fetch("/api/execute", {
+      const res = await fetch(this.apiUrl("/api/execute"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({ block_id: blockId, exercise_id: lessonId, code: code })
       });
       const data = await res.json();
@@ -336,12 +530,11 @@ class AppController {
         term.innerHTML = `<span style="color: #34d399;">✅ ¡TESTS PASADOS EXITOSAMENTE! (+50 XP)</span><br><br>${data.stdout ? data.stdout : 'Sin salida estándar.'}`;
         this.addXP(50, "Reto de código superado");
         
-        // Registrar lección como completada
         if (!this.user.completedLessons.includes(lessonId)) {
           this.user.completedLessons.push(lessonId);
-          fetch("/api/progress", {
+          fetch(this.apiUrl("/api/progress"), {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: this.getAuthHeaders(),
             body: JSON.stringify({ block_id: blockId, lesson_id: lessonId, completed: true, score: 100, xp_earned: 50 })
           });
           this.loadBlockNodes(blockId);
@@ -358,7 +551,7 @@ class AppController {
   // ==================== CURSO DE SQL ====================
   async loadSqlChallenges() {
     try {
-      const res = await fetch("/api/sql/challenges");
+      const res = await fetch(this.apiUrl("/api/sql/challenges"));
       if (res.ok) {
         const data = await res.json();
         this.sqlChallenges = data.challenges || [];
@@ -374,7 +567,7 @@ class AppController {
     if (!container) return;
 
     container.innerHTML = "";
-    this.sqlChallenges.forEach((m, idx) => {
+    this.sqlChallenges.forEach((m) => {
       const chip = document.createElement("div");
       chip.className = `mission-chip ${this.selectedMissionId === m.id ? 'active' : ''}`;
       chip.onclick = () => this.selectSqlMission(m.id);
@@ -423,12 +616,12 @@ class AppController {
 
     explBox.style.display = "block";
     resultsBox.style.display = "block";
-    tableContainer.innerHTML = "<div style='padding: 14px;'>⏳ Consultando base de datos en tiempo real...</div>";
+    tableContainer.innerHTML = "<div style='padding: 14px;'>⏳ Consultando Supabase/PostgreSQL en tiempo real...</div>";
 
     try {
-      const res = await fetch("/api/sql/execute", {
+      const res = await fetch(this.apiUrl("/api/sql/execute"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({
           query: query,
           mode: this.currentSqlMode,
@@ -438,10 +631,8 @@ class AppController {
       });
       const data = await res.json();
 
-      // Mostrar consulta interpretada
       document.getElementById("sqlInterpretedQuery").textContent = data.sql_query;
 
-      // Desglose de cláusulas
       const clausesList = document.getElementById("sqlClausesList");
       clausesList.innerHTML = "";
       if (data.explanation) {
@@ -453,11 +644,9 @@ class AppController {
         });
       }
 
-      // Métricas
       document.getElementById("sqlExecutionTime").textContent = `${data.execution_ms} ms`;
       document.getElementById("sqlTotalRows").textContent = `${data.total_rows} filas`;
 
-      // Renderizar tabla
       if (data.success && data.rows && data.rows.length > 0) {
         let tableHtml = `<table class="data-table"><thead><tr>`;
         data.columns.forEach(col => {
@@ -497,7 +686,7 @@ class AppController {
 
     if (isHidden) {
       try {
-        const res = await fetch("/api/sql/schema");
+        const res = await fetch(this.apiUrl("/api/sql/schema"));
         const data = await res.json();
         const grid = document.getElementById("schemaTablesGrid");
         grid.innerHTML = "";
@@ -524,7 +713,10 @@ class AppController {
   async seedDatabase() {
     if (!confirm("¿Deseas poblar/restaurar los datos de prueba en la base de datos (Supabase/PostgreSQL)?")) return;
     try {
-      const res = await fetch("/api/sql/seed", { method: "POST" });
+      const res = await fetch(this.apiUrl("/api/sql/seed"), {
+        method: "POST",
+        headers: this.getAuthHeaders()
+      });
       const data = await res.json();
       alert(`🌱 ${data.message}`);
     } catch (e) {
@@ -540,9 +732,9 @@ class AppController {
     box.innerHTML = "Calculando...";
 
     try {
-      const res = await fetch("/api/microapps/calculator", {
+      const res = await fetch(this.apiUrl("/api/microapps/calculator"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({ expression: expr })
       });
       const data = await res.json();
@@ -607,9 +799,9 @@ class AppController {
     box.innerHTML = "Generando...";
 
     try {
-      const res = await fetch("/api/microapps/generate_id_email", {
+      const res = await fetch(this.apiUrl("/api/microapps/generate_id_email"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({ nombre, apellido, anio_nacimiento: anio, empresa })
       });
       const data = await res.json();
@@ -644,9 +836,9 @@ class AppController {
     box.innerHTML = "Cotizando...";
 
     try {
-      const res = await fetch("/api/microapps/hotel_booking", {
+      const res = await fetch(this.apiUrl("/api/microapps/hotel_booking"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.getAuthHeaders(),
         body: JSON.stringify({ cliente, noches, tipo_habitacion: habitacion, incluye_desayuno: desayuno })
       });
       const data = await res.json();

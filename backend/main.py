@@ -26,6 +26,7 @@ from routes.progress_route import router as progress_router
 from routes.execute_route import router as execute_router
 from routes.sql_route import router as sql_router
 from routes.microapps_route import router as microapps_router
+from routes.auth_route import router as auth_router
 
 # Inicializar tablas de base de datos
 try:
@@ -57,6 +58,7 @@ app.include_router(progress_router)
 app.include_router(execute_router)
 app.include_router(sql_router)
 app.include_router(microapps_router)
+app.include_router(auth_router)
 
 # Servir archivos estáticos del Frontend
 STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web_app", "static")
@@ -70,6 +72,14 @@ def read_root():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return {"message": "Python & SQL Master API Running. Frontend directory not found."}
+
+@app.get("/style.css")
+def get_css():
+    return FileResponse(os.path.join(STATIC_DIR, "style.css"))
+
+@app.get("/app.js")
+def get_js():
+    return FileResponse(os.path.join(STATIC_DIR, "app.js"))
 
 @app.get("/health")
 def health_check():

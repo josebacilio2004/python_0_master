@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 from database import get_db
 import models
 from curriculum_data import ACHIEVEMENTS_LIST
+from auth import get_current_user_optional
 
 router = APIRouter(prefix="/api/progress", tags=["Progress & Gamification"])
 
@@ -36,16 +38,21 @@ def compute_rank(xp: int):
         return 6, "Staff Engineer & Arquitecto", 5000
 
 @router.get("")
-def get_user_progress(user_id: str = "default_user", db: Session = Depends(get_db)):
-    progress_records = db.query(models.UserProgress).filter(models.UserProgress.user_id == user_id).all()
+def get_user_progress(
+    user_id: str = "default_user",
+    auth_user: Optional[models.UserAccount] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+):
+    effective_user_id = auth_user.username if auth_user else user_id
+    progress_records = db.query(models.UserProgress).filter(models.UserProgress.user_id == effective_user_id).all()
     achievements = db.query(models.Achievement).all()
     
     # Obtener o crear perfil de usuario
-    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == user_id).first()
+    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == effective_user_id).first()
     if not profile:
         profile = models.UserProfile(
-            user_id=user_id,
-            username="Python Master",
+            user_id=effective_user_id,
+            username=auth_user.full_name if auth_user else "Python Master",
             xp=150,
             level=1,
             rank_title="Recluta del Byte",
@@ -96,9 +103,15 @@ def get_user_progress(user_id: str = "default_user", db: Session = Depends(get_d
     }
 
 @router.post("")
-def update_progress(payload: ProgressPayload, db: Session = Depends(get_db)):
+def update_progress(
+    payload: ProgressPayload,
+    auth_user: Optional[models.UserAccount] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+):
+    target_user_id = auth_user.username if auth_user else payload.user_id
+
     record = db.query(models.UserProgress).filter(
-        models.UserProgress.user_id == payload.user_id,
+        models.UserProgress.user_id == target_user_id,
         models.UserProgress.lesson_id == payload.lesson_id
     ).first()
 
@@ -110,7 +123,7 @@ def update_progress(payload: ProgressPayload, db: Session = Depends(get_db)):
     else:
         first_time = True
         record = models.UserProgress(
-            user_id=payload.user_id,
+            user_id=target_user_id,
             block_id=payload.block_id,
             lesson_id=payload.lesson_id,
             completed=payload.completed,
@@ -120,7 +133,7 @@ def update_progress(payload: ProgressPayload, db: Session = Depends(get_db)):
         db.add(record)
 
     # Actualizar XP del perfil de usuario si es primera vez
-    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == payload.user_id).first()
+    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == target_user_id).first()
     if profile and first_time:
         profile.xp += payload.xp_earned
         profile.completed_lessons += 1
@@ -147,10 +160,16 @@ def update_progress(payload: ProgressPayload, db: Session = Depends(get_db)):
     }
 
 @router.post("/add_xp")
-def add_xp(payload: AddXPPayload, db: Session = Depends(get_db)):
-    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == payload.user_id).first()
+def add_xp(
+    payload: AddXPPayload,
+    auth_user: Optional[models.UserAccount] = Depends(get_current_user_optional),
+    db: Session = Depends(get_db)
+):
+    target_user_id = auth_user.username if auth_user else payload.user_id
+
+    profile = db.query(models.UserProfile).filter(models.UserProfile.user_id == target_user_id).first()
     if not profile:
-        profile = models.UserProfile(user_id=payload.user_id, xp=150)
+        profile = models.UserProfile(user_id=target_user_id, xp=150)
         db.add(profile)
 
     profile.xp += payload.xp_amount

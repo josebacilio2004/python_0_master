@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Python & SQL Master: Game Edition</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <!-- Barra de Gamificación / Stats -->
+      <!-- Barra de Gamificación / Stats & Autenticación -->
       <div class="gamification-bar">
         <div class="stat-pill" title="Nivel del Jugador">
           <span class="stat-icon">⭐</span>
@@ -37,6 +37,12 @@
         </div>
         <button class="btn-db-seed" onclick="app.seedDatabase()" title="Sembrar / Restaurar datos en Supabase/SQLite">
           🌱 <span class="hide-mobile">BD Seeder</span>
+        </button>
+        <button class="btn-auth" id="btnAuthHeader" onclick="app.openAuthModal()" title="Iniciar Sesión o Registrarse">
+          🔑 <span class="hide-mobile">Ingresar</span>
+        </button>
+        <button class="btn-api-config" onclick="app.openApiModal()" title="Configurar URL del Backend en Render">
+          ⚙️
         </button>
       </div>
     </div>
@@ -308,6 +314,68 @@
       </div>
     </section>
 
+    <!-- ==================== VISTA MODAL: AUTENTICACIÓN / LOGIN ==================== -->
+    <section id="viewAuthModal" class="lesson-modal" style="display: none;">
+      <div class="lesson-modal-content" style="max-width: 420px;">
+        <button class="btn-close-modal" onclick="app.closeAuthModal()">✕ Cerrar</button>
+        <div class="auth-tabs-row">
+          <button class="auth-tab-btn active" id="btnTabLogin" onclick="app.switchAuthMode('login')">Iniciar Sesión</button>
+          <button class="auth-tab-btn" id="btnTabRegister" onclick="app.switchAuthMode('register')">Crear Cuenta</button>
+        </div>
+
+        <!-- Formulario Iniciar Sesión -->
+        <form id="formLogin" onsubmit="event.preventDefault(); app.submitLogin();">
+          <div style="margin-top: 14px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Usuario o Correo:</label>
+            <input type="text" id="loginIdent" class="app-input" required placeholder="Ej: carlos o carlos@empresa.com" style="margin-top: 4px;">
+          </div>
+          <div style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Contraseña:</label>
+            <input type="password" id="loginPwd" class="app-input" required placeholder="••••••••" style="margin-top: 4px;">
+          </div>
+          <button type="submit" class="btn-primary btn-full" style="margin-top: 16px;">Entrar al Sistema ⚡</button>
+        </form>
+
+        <!-- Formulario Registro -->
+        <form id="formRegister" onsubmit="event.preventDefault(); app.submitRegister();" style="display: none;">
+          <div style="margin-top: 14px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Nombre de Usuario:</label>
+            <input type="text" id="regUser" class="app-input" required placeholder="Ej: jose2026" style="margin-top: 4px;">
+          </div>
+          <div style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Correo Electrónico:</label>
+            <input type="email" id="regEmail" class="app-input" required placeholder="tu@email.com" style="margin-top: 4px;">
+          </div>
+          <div style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Nombre Completo:</label>
+            <input type="text" id="regFullName" class="app-input" placeholder="Ej: José Bacilio" style="margin-top: 4px;">
+          </div>
+          <div style="margin-top: 10px;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">Contraseña (Mín. 6 caracteres):</label>
+            <input type="password" id="regPwd" class="app-input" minlength="6" required placeholder="••••••••" style="margin-top: 4px;">
+          </div>
+          <button type="submit" class="btn-primary btn-full" style="margin-top: 16px;">Registrarse & Obtener +150 XP 🚀</button>
+        </form>
+        <div id="authStatusMsg" style="margin-top: 10px; font-size: 0.8rem; display: none;"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VISTA MODAL: CONFIGURACIÓN DE API (GITHUB PAGES) ==================== -->
+    <section id="viewApiModal" class="lesson-modal" style="display: none;">
+      <div class="lesson-modal-content" style="max-width: 480px;">
+        <button class="btn-close-modal" onclick="app.closeApiModal()">✕ Cerrar</button>
+        <h3 style="font-size: 1rem; color: var(--primary); margin-bottom: 8px;">⚙️ Conexión Backend API</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          Si abres la aplicación desde <strong>GitHub Pages</strong>, ingresa la URL de tu servicio web en Render para conectar la base de datos de Supabase.
+        </p>
+        <input type="text" id="inputApiBaseUrl" class="app-input" placeholder="https://tu-servicio.onrender.com">
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="btn-secondary" style="flex: 1;" onclick="app.setLocalApi()">Usar Localhost</button>
+          <button class="btn-primary" style="flex: 1;" onclick="app.saveApiBaseUrl()">Guardar URL</button>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Mobile Bottom Navigation Bar (Compatible con iPhone 7) -->
@@ -334,6 +402,6 @@
     </button>
   </nav>
 
-  <script src="/static/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
